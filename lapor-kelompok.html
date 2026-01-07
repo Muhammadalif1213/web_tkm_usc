@@ -193,57 +193,106 @@
                 <div class="form-section">
                   <h3 class="section-title">2. Data Anggota Tim</h3>
 
-                  <div class="anggota-list" id="anggotaList">
-                    <div class="anggota-item ketua">
-                      <div class="anggota-info">
-                        <strong>Muhammad Alifian Aqilah</strong>
-                        <small>NIM: 20220140075 • Peran: KETUA</small>
+                  <div class="add-member-box">
+                    <label class="box-label">Tambah Anggota</label>
+
+                    <div class="search-row">
+                      <div class="search-wrapper">
+                        <div class="search-icon">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#666"
+                            stroke-width="2"
+                          >
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                        </div>
+                        <input
+                          type="text"
+                          id="searchMahasiswa"
+                          placeholder="Cari berdasarkan NIM / Nama Mahasiswa..."
+                          autocomplete="off"
+                        />
+                        <div
+                          id="searchResults"
+                          class="search-dropdown hidden"
+                        ></div>
                       </div>
-                      <span class="badge-role">KETUA</span>
+
+                      <div class="role-wrapper">
+                        <select id="peranAnggota">
+                          <option value="anggota">Anggota</option>
+                          <option value="sekretaris">Sekretaris</option>
+                          <option value="bendahara">Bendahara</option>
+                          <option value="koordinator">Koordinator</option>
+                          <option value="humas">Humas</option>
+                        </select>
+                      </div>
+
+                      <button
+                        type="button"
+                        class="btn-icon-add"
+                        onclick="tambahAnggota()"
+                        title="Tambahkan ke list"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#fff"
+                          stroke-width="2"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                      </button>
                     </div>
+                    <small class="hint" id="selectedHint"
+                      >Silakan cari dan pilih mahasiswa terlebih dahulu.</small
+                    >
                   </div>
 
-                  <div class="add-member-box">
-                    <h4>Tambah Anggota Baru</h4>
-                    <div class="form-row">
-                      <div class="input-group">
-                        <label for="nimAnggota">NIM</label>
-                        <input
-                          type="text"
-                          id="nimAnggota"
-                          placeholder="Masukkan NIM"
-                        />
-                      </div>
-                      <div class="input-group">
-                        <label for="namaAnggota">Nama Lengkap</label>
-                        <input
-                          type="text"
-                          id="namaAnggota"
-                          placeholder="Masukkan Nama"
-                        />
-                      </div>
+                  <div class="table-member-wrapper">
+                    <table class="member-table">
+                      <thead>
+                        <tr>
+                          <th width="20%">NIM</th>
+                          <th width="40%">Nama Mahasiswa</th>
+                          <th width="20%">Peran</th>
+                          <th width="20%" class="text-center">Aksi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="anggotaTableBody">
+                        <tr class="row-ketua">
+                          <td>20220140075</td>
+                          <td><strong>Muhammad Alifian Aqilah</strong></td>
+                          <td><span class="badge-ketua">Ketua</span></td>
+                          <td class="text-center">
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="#000"
+                              stroke-width="2"
+                            >
+                              <path
+                                d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                              ></path>
+                              <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="table-footer">
+                      Total Anggota Kelompok: <span id="totalAnggota">1</span>
                     </div>
-
-                    <div class="input-group" id="peranField">
-                      <label for="peranAnggota">Peran</label>
-                      <select id="peranAnggota">
-                        <option value="anggota">Anggota</option>
-                        <option value="sekretaris">Sekretaris</option>
-                        <option value="bendahara">Bendahara</option>
-                        <option value="humas">Humas</option>
-                      </select>
-                      <small class="hint" id="hintPeran"
-                        >Pilih peran anggota.</small
-                      >
-                    </div>
-
-                    <button
-                      type="button"
-                      class="btn-add-anggota"
-                      onclick="tambahAnggota()"
-                    >
-                      + Tambahkan Anggota
-                    </button>
                   </div>
                 </div>
 
@@ -263,7 +312,7 @@
 
               <div class="wizard-step" data-step="3">
                 <div class="form-section">
-                  <h3 class="section-title">3. Upload Bukti</h3>
+                  <h3 class="section-title">3. Upload Bukti & Dokumentasi</h3>
 
                   <div class="input-group">
                     <label>Upload File</label>
@@ -291,6 +340,8 @@
                       <p id="uploadText">
                         <b>Klik untuk upload</b> atau drag and drop
                       </p>
+                      <small class="hint">JPG, JPEG, PNG, PDF (Max 5MB)</small>
+
                       <input
                         type="file"
                         id="fileBukti"
@@ -301,7 +352,40 @@
                   </div>
 
                   <div class="input-group">
-                    <label>List Bukti</label>
+                    <label for="linkBukti">Link Eksternal (Opsional)</label>
+                    <div class="input-with-button">
+                      <input
+                        type="url"
+                        id="linkBukti"
+                        placeholder="https://..."
+                      />
+                      <button
+                        type="button"
+                        class="btn-icon-add"
+                        id="btnAddLink"
+                        title="Tambahkan Link"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19"></line>
+                          <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                      </button>
+                    </div>
+                    <small class="hint"
+                      >Gunakan link dari Google Drive, Dropbox, atau lainnya.
+                      Klik (+) untuk menambahkan.</small
+                    >
+                  </div>
+
+                  <div class="input-group">
+                    <label>List Bukti (File & Link)</label>
                     <div id="previewContainer">
                       <p class="hint" id="emptyText" style="margin-top: 0">
                         Belum ada bukti yang dipilih
@@ -310,7 +394,7 @@
                   </div>
 
                   <div class="input-group">
-                    <label for="keterangan">Keterangan</label>
+                    <label for="keterangan">Keterangan Tambahan</label>
                     <textarea
                       id="keterangan"
                       placeholder="Catatan tambahan..."
