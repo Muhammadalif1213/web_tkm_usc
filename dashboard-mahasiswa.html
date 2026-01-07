@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Mahasiswa - Sistem TKM</title>
+    <link rel="stylesheet" href="/style/dashboard-mahasiswa.css" />
+    <link rel="stylesheet" href="/style/style.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Sistem TKM</h2>
+          <p>Universitas Surya Cemerlang</p>
+        </div>
+        <nav class="sidebar-menu">
+          <ul>
+            <li class="active">
+              <a href="dashboard-mahasiswa.html">Dashboard</a>
+            </li>
+
+            <li class="has-submenu">
+              <a href="javascript:void(0)" onclick="toggleMenu(this)">
+                Lapor Kegiatan
+                <!-- <span class="arrow">▼</span> -->
+              </a>
+              <ul class="submenu">
+                <li><a href="lapor-kegiatan.html">Pribadi</a></li>
+                <li><a href="lapor-kelompok.html">Kelompok</a></li>
+              </ul>
+            </li>
+
+            <li><a href="riwayat.html">Riwayat</a></li>
+            <li><a href="#">Download Dokumen</a></li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <button id="logoutBtn" class="btn-logout">Keluar</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="dashboard-header-row">
+          <header class="profile-card">
+            <div class="profile-pic">
+              <div class="avatar-placeholder"></div>
+            </div>
+            <div class="profile-info">
+              <h3>Muhammad Alifian Aqilah</h3>
+              <p>NIM: 20220140075</p>
+              <small>Dosen Pembimbing: Dr. Reza...</small>
+            </div>
+          </header>
+        </div>
+
+        <div class="dashboard-header-row">
+          <section class="status-banner">
+            <p class="label">Status Kelulusan TKM</p>
+            <h1 class="status-text">Belum Tercapai</h1>
+          </section>
+        </div>
+
+        <section class="stats-grid">
+          <div class="card">
+            <h4>Kegiatan Wajib Terpenuhi</h4>
+            <div class="stat-value">
+              <span class="big-num">8</span>
+              <span class="sub-text">/ 10 Kegiatan</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Poin TKM</h4>
+            <div class="stat-value">
+              <span class="big-num">75</span>
+              <span class="sub-text">/ 100</span>
+            </div>
+            <div class="progress-container">
+              <div class="progress-bar" style="width: 75%"></div>
+            </div>
+            <small>Target Minimal: 100</small>
+          </div>
+
+          <div class="card">
+            <h4>Pelanggaran</h4>
+            <div class="stat-row">
+              <span>Total Poin Pengurangan</span>
+              <span class="danger-text">-15 Poin</span>
+            </div>
+            <div class="stat-row">
+              <span>Jumlah Pelanggaran</span>
+              <span class="bold-text">2 Kasus</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="lists-grid">
+          <div class="card list-card">
+            <h4>Daftar Kegiatan Wajib</h4>
+            <ul class="simple-list">
+              <li>1. MATAF (Masa Ta'aruf)</li>
+              <li>2. Baitul Arqam Dasar</li>
+              <li>3. KKN (Kuliah Kerja Nyata)</li>
+              <li>4. Seminar Proposal</li>
+            </ul>
+          </div>
+
+          <div class="card list-card">
+            <h4>Status Kegiatan Dilaporkan</h4>
+            <ul class="status-list">
+              <li>
+                <span>MATAF (Masa Ta'aruf)</span>
+                <span class="badge yellow">Menunggu Validasi</span>
+              </li>
+              <li>
+                <span>Seminar Nasional AI</span>
+                <span class="badge yellow">Menunggu Validasi</span>
+              </li>
+              <li>
+                <span>Bakti Sosial</span>
+                <span class="badge red">Tidak Valid</span>
+              </li>
+              <li>
+                <span>Workshop UI/UX</span>
+                <span class="badge green">Valid</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/js/script.js"></script>
+  </body>
+</html>

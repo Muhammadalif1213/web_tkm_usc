@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat Aktivitas - Sistem TKM</title>
+    <link rel="stylesheet" href="/style/style.css" />
+    <link rel="stylesheet" href="/style/riwayatstyle.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Sistem TKM</h2>
+          <p>Universitas Surya Cemerlang</p>
+        </div>
+        <nav class="sidebar-menu">
+          <ul>
+            <li><a href="dashboard-mahasiswa.html">Dashboard</a></li>
+            <li class="has-submenu">
+              <a href="javascript:void(0)" onclick="toggleMenu(this)">
+                Lapor Kegiatan <span class="arrow">▼</span>
+              </a>
+              <ul class="submenu">
+                <li><a href="lapor-kegiatan.html">Pribadi</a></li>
+                <li><a href="lapor-kelompok.html">Kelompok</a></li>
+              </ul>
+            </li>
+            <li class="active"><a href="riwayat.html">Riwayat</a></li>
+            <li><a href="#">Download Dokumen</a></li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <button id="logoutBtn" class="btn-logout">Keluar</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="page-title">
+          <h2>Riwayat</h2>
+        </div>
+
+        <div class="student-info-card">
+          <div class="info-item">
+            <span class="label">Mahasiswa:</span>
+            <span class="value">Muhammad Alifian Aqilah</span>
+          </div>
+          <div class="info-item">
+            <span class="label">NIM:</span>
+            <span class="value">20220140075</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Dosen Pembimbing:</span>
+            <span class="value">Dr. Reza Giga Isnanda, S.T., M.Sc.</span>
+          </div>
+        </div>
+
+        <div class="history-card">
+          <div class="card-header-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <h3>Daftar Riwayat</h3>
+          </div>
+
+          <div class="tabs-header">
+            <button class="tab-btn active" onclick="switchTab('nilai')">
+              Nilai
+            </button>
+            <button class="tab-btn" onclick="switchTab('status')">
+              Status Laporan
+            </button>
+            <button class="tab-btn" onclick="switchTab('pelanggaran')">
+              Pelanggaran
+            </button>
+          </div>
+
+          <div class="tab-content-area">
+            <div id="view-nilai" class="tab-view active">
+              <div class="stats-row">
+                <div class="stat-box">
+                  <span class="stat-label">Poin TKM Terkumpul</span>
+                  <div class="stat-number">
+                    <span id="stat-total-poin">0</span
+                    ><span class="stat-total">/100</span>
+                  </div>
+                  <span class="stat-status" id="stat-status-lulus"
+                    >Menghitung...</span
+                  >
+                </div>
+                <div class="stat-box">
+                  <span class="stat-label">Kegiatan Terpenuhi</span>
+                  <div class="stat-number" id="stat-total-kegiatan">0</div>
+                </div>
+                <div class="stat-box">
+                  <span class="stat-label">Sisa Kegiatan Wajib</span>
+                  <div class="stat-number" id="stat-sisa-wajib">0</div>
+                </div>
+              </div>
+
+              <div class="table-section-header">
+                <h4>Rincian Kegiatan</h4>
+                <div class="filters">
+                  <select id="filterKategoriNilai" onchange="renderNilai()">
+                    <option value="">--- Semua Kategori ---</option>
+                    <option value="Organisasi">Organisasi</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Kompetisi">Kompetisi</option>
+                  </select>
+                  <select id="filterJenisNilai" onchange="renderNilai()">
+                    <option value="">--- Semua Jenis ---</option>
+                    <option value="Wajib">Wajib</option>
+                    <option value="Pilihan">Pilihan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-container">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Kategori</th>
+                      <th>Nama Kegiatan</th>
+                      <th>Jenis Kegiatan</th>
+                      <th class="text-right">Poin</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-nilai"></tbody>
+                </table>
+              </div>
+              <div class="pagination-wrapper">
+                <div id="pagination-nilai" class="pagination"></div>
+              </div>
+            </div>
+
+            <div id="view-status" class="tab-view" style="display: none">
+              <div class="table-section-header">
+                <h4>Rincian Status Laporan</h4>
+                <div class="filters">
+                  <select id="filterKategoriStatus" onchange="renderStatus()">
+                    <option value="">--- Semua Kategori ---</option>
+                    <option value="Organisasi">Organisasi</option>
+                    <option value="Seminar">Seminar</option>
+                    <option value="Kompetisi">Kompetisi</option>
+                  </select>
+                  <select id="filterStatusLaporan" onchange="renderStatus()">
+                    <option value="">--- Semua Status ---</option>
+                    <option value="Valid">Valid</option>
+                    <option value="Menunggu">Menunggu Validasi</option>
+                    <option value="Tidak Valid">Tidak Valid</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Tanggal</th>
+                      <th>Nama Kegiatan</th>
+                      <th>Kategori</th>
+                      <th>Status</th>
+                      <th>Keterangan</th>
+                      <th class="text-center">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-status"></tbody>
+                </table>
+              </div>
+              <div class="pagination-wrapper">
+                <div id="pagination-status" class="pagination"></div>
+              </div>
+            </div>
+
+            <div id="view-pelanggaran" class="tab-view" style="display: none">
+              <div class="stats-row center-content">
+                <div class="stat-box warning">
+                  <span class="stat-label">Jumlah Pelanggaran</span>
+                  <div class="stat-number" id="stat-total-pelanggaran">0</div>
+                </div>
+                <div class="stat-box warning">
+                  <span class="stat-label">Total Poin Pengurangan</span>
+                  <div class="stat-number" id="stat-poin-minus">0</div>
+                </div>
+              </div>
+
+              <div class="table-section-header">
+                <h4>Daftar Pelanggaran</h4>
+                <div class="filters">
+                  <select
+                    id="filterKategoriPelanggaran"
+                    onchange="renderPelanggaran()"
+                  >
+                    <option value="">--- Semua Kategori pelanggaran ---</option>
+                    <option value="Akademik">Akademik</option>
+                    <option value="Kehadiran">Kehadiran</option>
+                  </select>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Tanggal</th>
+                      <th>Kategori</th>
+                      <th>Nama Kegiatan</th>
+                      <th>Pelapor</th>
+                      <th class="text-right">Pengurangan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody-pelanggaran"></tbody>
+                </table>
+              </div>
+              <div class="pagination-wrapper">
+                <div id="pagination-pelanggaran" class="pagination"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script src="js/riwayat.js"></script>
+  </body>
+</html>

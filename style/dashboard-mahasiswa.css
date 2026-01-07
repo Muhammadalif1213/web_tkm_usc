@@ -1,0 +1,339 @@
+/* =========================================
+   1. HEADER ROW (PROFILE + BANNER SEJAJAR)
+   ========================================= */
+/* Container Grid Atas */
+.dashboard-header-row {
+  /* display: grid; */
+  grid-template-columns: 1.5fr 1fr; /* Profile 60%, Banner 40% */
+  gap: 24px;
+  margin-bottom: 24px;
+  align-items: stretch; /* Tinggi Profile & Banner sama rata */
+}
+
+/* Profile Card */
+.profile-card {
+  background: #ffffff;
+  padding: 24px 30px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.3s ease;
+  height: 100%; /* Full height container */
+  margin-bottom: 0; /* Hapus margin default */
+}
+.profile-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.avatar-placeholder {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 30px;
+}
+.avatar-placeholder::after {
+  content: "👤";
+}
+
+.profile-info h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+.profile-info p {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.profile-info small {
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Status Banner */
+.status-banner {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  padding: 20px;
+  border-radius: 20px;
+  text-align: left;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.25);
+  height: 100%; /* Full height container */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.status-banner::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+.status-banner .label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+.status-banner .status-text {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+}
+
+/* =========================================
+   2. STATS GRID (BARIS TENGAH)
+   ========================================= */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
+}
+
+.card h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.stat-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.big-num {
+  font-size: 36px;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1;
+}
+.sub-text {
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f8fafc;
+  font-size: 13px;
+  color: #64748b;
+}
+.stat-row:last-child {
+  border: none;
+  padding-bottom: 0;
+}
+.danger-text {
+  color: #ef4444;
+  font-weight: 700;
+}
+.bold-text {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 10px;
+  position: relative;
+  width: 0%;
+  transition: width 1s ease-out;
+}
+.progress-bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* =========================================
+   3. LISTS GRID (BARIS BAWAH - FILL HEIGHT)
+   ========================================= */
+.lists-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  /* Agar mengisi sisa ruang bawah */
+  min-height: 250px;
+}
+
+.list-card {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scroll internal untuk list jika terlalu panjang */
+.simple-list,
+.status-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+  max-height: 300px; /* Batas tinggi list */
+}
+
+/* Custom Scrollbar untuk List */
+.simple-list::-webkit-scrollbar,
+.status-list::-webkit-scrollbar {
+  width: 4px;
+}
+.simple-list::-webkit-scrollbar-thumb,
+.status-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.simple-list li,
+.status-list li {
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #334155;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.simple-list li:hover,
+.status-list li:hover {
+  background: #fff;
+  border-color: #cbd5e1;
+  transform: translateX(3px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+.status-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Badges */
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.badge.yellow {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fcd34d;
+}
+.badge.green {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+.badge.red {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.main-content > * {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+.dashboard-header-row {
+  animation-delay: 0.1s;
+}
+.stats-grid {
+  animation-delay: 0.2s;
+}
+.lists-grid {
+  animation-delay: 0.3s;
+}
+
+/* Responsif Laptop Kecil */
+@media (max-width: 1200px) {
+  .dashboard-header-row {
+    grid-template-columns: 1fr;
+  } /* Stack vertikal */
+}

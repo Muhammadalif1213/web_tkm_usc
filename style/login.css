@@ -1,0 +1,102 @@
+/* --- RESET KHUSUS LOGIN --- */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: #e5e5e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* --- KARTU LOGIN --- */
+.login-container {
+  background-color: #d9d9d9;
+  padding: 40px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* --- AREA LOGO --- */
+.logo-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.logo-placeholder {
+  width: 80px;
+  height: 60px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+}
+
+/* --- FORM INPUT --- */
+.input-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+input {
+  width: 100%;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  outline: none;
+}
+
+input:focus {
+  box-shadow: 0 0 0 2px #aaa;
+}
+
+/* Ikon Mata Password */
+.password-group {
+  display: flex;
+  align-items: center;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.eye-icon svg {
+  stroke: #888;
+}
+
+/* --- TOMBOL MASUK --- */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #333;
+}
