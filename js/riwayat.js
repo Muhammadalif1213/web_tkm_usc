@@ -1,90 +1,92 @@
 /* =========================================
-   LOGIKA RIWAYAT (Tabs, Filter, Pagination, Stats)
+   LOGIKA RIWAYAT (Integrated Data)
    ========================================= */
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 8;
 const TARGET_POIN = 100;
-const TARGET_WAJIB = 10; // Target jumlah kegiatan wajib
+const TARGET_WAJIB = 10;
 
-// --- DATA DUMMY ---
-const dataNilai = [
-  { kategori: "Seminar", nama: "Workshop UI/UX", jenis: "Pilihan", poin: 50 },
+// --- 1. DATA TUNGGAL (SINGLE SOURCE OF TRUTH) ---
+// Menggabungkan Data Nilai & Status menjadi satu array master
+const dataKegiatan = [
+  // Data VALID (Akan muncul di Tab Nilai & Tab Status)
   {
+    tgl: "15 Nov 2024",
+    nama: "Lomba Essay Nasional",
     kategori: "Kompetisi",
-    nama: "Lomba Fotografi",
     jenis: "Pilihan",
-    poin: 15,
+    poin: 20,
+    status: "Valid",
+    ket: "-",
   },
-  { kategori: "Organisasi", nama: "Panitia Ospek", jenis: "Wajib", poin: 12 },
-  { kategori: "Seminar", nama: "Kuliah Umum", jenis: "Wajib", poin: 5 },
-  { kategori: "Organisasi", nama: "Bendahara Kelas", jenis: "Wajib", poin: 8 },
   {
-    kategori: "Seminar",
-    nama: "Webinar Cyber Security",
+    tgl: "11 Nov 2024",
+    nama: "Lomba Healthkaton",
+    kategori: "Kompetisi",
     jenis: "Pilihan",
-    poin: 4,
+    poin: 30,
+    status: "Valid",
+    ket: "-",
   },
-];
+  {
+    tgl: "05 Nov 2024",
+    nama: "Panitia Ospek",
+    kategori: "Organisasi",
+    jenis: "Wajib",
+    poin: 15,
+    status: "Valid",
+    ket: "-",
+  },
+  {
+    tgl: "01 Nov 2024",
+    nama: "Seminar Nasional AI",
+    kategori: "Seminar",
+    jenis: "Pilihan",
+    poin: 5,
+    status: "Valid",
+    ket: "-",
+  },
 
-const dataStatus = [
+  // Data BELUM VALID / DITOLAK (Hanya muncul di Tab Status)
   {
     tgl: "20 Nov 2024",
     nama: "Workshop Machine Learning",
     kategori: "Seminar",
+    jenis: "Pilihan",
+    poin: 10,
     status: "Tidak Valid",
-    ket: "Bukti tidak lengkap",
+    ket: "Bukti buram/tidak terbaca",
   },
   {
     tgl: "18 Nov 2024",
     nama: "Ketua BEM Fakultas",
     kategori: "Organisasi",
+    jenis: "Wajib",
+    poin: 50,
     status: "Menunggu Validasi",
     ket: "-",
   },
   {
-    tgl: "15 Nov 2024",
-    nama: "Lomba Essay Nasional",
-    kategori: "Kompetisi",
-    status: "Valid",
+    tgl: "19 Nov 2024",
+    nama: "Anggota Himpunan",
+    kategori: "Organisasi",
+    jenis: "Wajib",
+    poin: 10,
+    status: "Menunggu Validasi",
     ket: "-",
   },
   {
-    tgl: "11 Nov 2024",
-    nama: "Lomba Healthkaton",
+    tgl: "25 Okt 2024",
+    nama: "Lomba Fotografi",
     kategori: "Kompetisi",
-    status: "Valid",
-    ket: "-",
-  },
-  {
-    tgl: "15 Nov 2024",
-    nama: "Lomba Essay Nasional",
-    kategori: "Kompetisi",
-    status: "Valid",
-    ket: "-",
-  },
-  {
-    tgl: "11 Nov 2024",
-    nama: "Lomba Healthkaton",
-    kategori: "Kompetisi",
-    status: "Valid",
-    ket: "-",
-  },
-  {
-    tgl: "15 Nov 2024",
-    nama: "Lomba Essay Nasional",
-    kategori: "Kompetisi",
-    status: "Valid",
-    ket: "-",
-  },
-  {
-    tgl: "11 Nov 2024",
-    nama: "Lomba Healthkaton",
-    kategori: "Kompetisi",
-    status: "Valid",
-    ket: "-",
+    jenis: "Pilihan",
+    poin: 15,
+    status: "Tidak Valid",
+    ket: "Sertifikat kadaluarsa",
   },
 ];
 
+// Data Pelanggaran tetap terpisah karena strukturnya beda
 const dataPelanggaran = [
   {
     tgl: "15 Nov 2024",
@@ -111,31 +113,35 @@ const dataPelanggaran = [
 
 let currentPage = { nilai: 1, status: 1, pelanggaran: 1 };
 
-// --- 1. FUNGSI HITUNG STATISTIK (BARU) ---
+// --- 2. FUNGSI HITUNG STATISTIK ---
 function updateStatistics() {
-  // A. Hitung Poin Kegiatan (Positif)
   let totalPoinKegiatan = 0;
-  let jumlahWajib = 0;
+  let jumlahWajibValid = 0;
+  let totalKegiatanValid = 0;
 
-  dataNilai.forEach((item) => {
-    totalPoinKegiatan += item.poin;
-    if (item.jenis === "Wajib") jumlahWajib++;
+  // A. Hitung hanya dari data yang VALID
+  dataKegiatan.forEach((item) => {
+    if (item.status === "Valid") {
+      totalPoinKegiatan += item.poin;
+      totalKegiatanValid++;
+      if (item.jenis === "Wajib") jumlahWajibValid++;
+    }
   });
 
-  // B. Hitung Poin Pelanggaran (Negatif)
+  // B. Hitung Poin Pelanggaran
   let totalPoinSanksi = 0;
   dataPelanggaran.forEach((item) => {
-    totalPoinSanksi += item.sanksi; // sanksi bernilai negatif (misal -20)
+    totalPoinSanksi += item.sanksi;
   });
 
-  // C. Poin Akhir = Kegiatan + Sanksi (Karena sanksi minus, jadi otomatis berkurang)
+  // C. Poin Akhir
   const poinAkhir = totalPoinKegiatan + totalPoinSanksi;
 
-  // D. Update UI Tab Nilai
+  // D. Update UI
   document.getElementById("stat-total-poin").innerText = poinAkhir;
-  document.getElementById("stat-total-kegiatan").innerText = dataNilai.length;
+  document.getElementById("stat-total-kegiatan").innerText = totalKegiatanValid; // Hanya hitung yg valid
 
-  const sisaWajib = TARGET_WAJIB - jumlahWajib;
+  const sisaWajib = TARGET_WAJIB - jumlahWajibValid;
   document.getElementById("stat-sisa-wajib").innerText =
     sisaWajib > 0 ? sisaWajib : 0;
 
@@ -149,13 +155,13 @@ function updateStatistics() {
     statusEl.style.color = "#555";
   }
 
-  // E. Update UI Tab Pelanggaran
+  // E. Update Pelanggaran Stats
   document.getElementById("stat-total-pelanggaran").innerText =
     dataPelanggaran.length;
-  document.getElementById("stat-poin-minus").innerText = totalPoinSanksi; // Akan tampil misal "-50"
+  document.getElementById("stat-poin-minus").innerText = totalPoinSanksi;
 }
 
-// --- 2. TABS ---
+// --- 3. TABS SWITCHER ---
 function switchTab(tabId) {
   document
     .querySelectorAll(".tab-view")
@@ -178,7 +184,7 @@ function switchTab(tabId) {
   if (tabId === "pelanggaran") renderPelanggaran();
 }
 
-// --- 3. RENDER HELPER ---
+// --- 4. RENDER HELPER ---
 function renderTable(data, tbodyId, paginationId, pageKey, rowRenderer) {
   const tbody = document.getElementById(tbodyId);
   const pagination = document.getElementById(paginationId);
@@ -240,12 +246,17 @@ function refreshTab(key) {
   if (key === "pelanggaran") renderPelanggaran();
 }
 
-// --- 4. RENDER SPECIFIC TABLES ---
+// --- 5. RENDER SPESIFIK (LOGIKA UPDATE) ---
+
+// A. RENDER NILAI (Hanya yang VALID)
 function renderNilai() {
   const kat = document.getElementById("filterKategoriNilai").value;
   const jen = document.getElementById("filterJenisNilai").value;
-  const filtered = dataNilai.filter(
+
+  // Filter Logic: Kategori + Jenis + STATUS HARUS VALID
+  const filtered = dataKegiatan.filter(
     (item) =>
+      item.status === "Valid" &&
       (kat === "" || item.kategori === kat) &&
       (jen === "" || item.jenis === jen)
   );
@@ -266,11 +277,12 @@ function renderNilai() {
   );
 }
 
+// B. RENDER STATUS (Semua Data: Valid, Menunggu, Tidak Valid)
 function renderStatus() {
   const kat = document.getElementById("filterKategoriStatus").value;
   const stat = document.getElementById("filterStatusLaporan").value;
 
-  const filtered = dataStatus.filter(
+  const filtered = dataKegiatan.filter(
     (item) =>
       (kat === "" || item.kategori === kat) &&
       (stat === "" || item.status === stat)
@@ -282,33 +294,29 @@ function renderStatus() {
     "pagination-status",
     "status",
     (item) => {
-      // 1. LOGIKA WARNA BADGE
       let badgeClass = "";
-      if (item.status === "Valid") badgeClass = "bg-success";
-      else if (item.status === "Menunggu Validasi") badgeClass = "bg-warning";
-      else badgeClass = "bg-danger";
-
-      // 2. LOGIKA TOMBOL AKSI (Sesuai Permintaan)
       let actionButtons = "";
 
+      // Tentukan Badge & Tombol Aksi
       if (item.status === "Valid") {
-        // Jika Valid -> Hilangkan Icon (Tampilkan strip saja)
+        badgeClass = "bg-success";
         actionButtons = '<span style="color:#ccc;">-</span>';
       } else if (item.status === "Menunggu Validasi") {
-        // Jika Menunggu -> Hanya Icon Delete
+        badgeClass = "bg-warning";
         actionButtons = `
-                <button class="action-btn" title="Batalkan Laporan">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <button class="action-btn" title="Batalkan">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             `;
-      } else if (item.status === "Tidak Valid") {
-        // Jika Tidak Valid -> Icon Edit (Pensil) & Delete (Sampah)
+      } else {
+        // Tidak Valid
+        badgeClass = "bg-danger";
         actionButtons = `
-                <button class="action-btn" title="Perbaiki Laporan">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <button class="action-btn" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 </button>
-                <button class="action-btn" title="Hapus Laporan">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                <button class="action-btn" title="Hapus">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             `;
       }
@@ -320,14 +328,13 @@ function renderStatus() {
             <td>${item.kategori}</td>
             <td><span class="badge ${badgeClass}">${item.status}</span></td>
             <td>${item.ket}</td>
-            <td class="text-center">
-                ${actionButtons}
-            </td>
+            <td class="text-center">${actionButtons}</td>
         </tr>`;
     }
   );
 }
 
+// C. RENDER PELANGGARAN
 function renderPelanggaran() {
   const kat = document.getElementById("filterKategoriPelanggaran").value;
   const filtered = dataPelanggaran.filter(
@@ -351,8 +358,8 @@ function renderPelanggaran() {
   );
 }
 
-// --- INIT ---
+// Init
 document.addEventListener("DOMContentLoaded", () => {
-  updateStatistics(); // Hitung dulu sebelum render
+  updateStatistics();
   renderNilai();
 });
