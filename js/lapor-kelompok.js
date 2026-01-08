@@ -381,10 +381,111 @@ document.addEventListener("DOMContentLoaded", function () {
   if (formKelompok) {
     formKelompok.addEventListener("submit", function (e) {
       e.preventDefault();
+
+      // VALIDASI PREVIEW
+      const previewContainer = document.getElementById("previewContainer");
+      const hasItems =
+        previewContainer.querySelectorAll(".file-item").length > 0;
+      if (!hasItems) {
+        alert("Mohon upload bukti kegiatan.");
+        return;
+      }
+
+      // --- SIMPAN KE LOCALSTORAGE ---
+      const nama = document.getElementById("namaKegiatan").value;
+      const kategori = document.getElementById("kategoriKegiatan").value;
+      const jenisVal = document.getElementById("jenisKegiatan").value;
+      const tglInput = document.getElementById("tanggalMulai").value;
+
+      const dateObj = new Date(tglInput);
+      const tglFormatted = dateObj.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+
+      let jenisText = "Wajib";
+      if (jenisVal === "lomba") jenisText = "Pilihan";
+
+      const newItem = {
+        tgl: tglFormatted,
+        nama: nama,
+        kategori: kategori.charAt(0).toUpperCase() + kategori.slice(1),
+        jenis: jenisText,
+        poin: 0,
+        status: "Menunggu Validasi",
+        ket: "-",
+      };
+
+      let currentData = JSON.parse(localStorage.getItem("riwayatData"));
+      if (!currentData) {
+        // Init data dummy jika kosong
+        currentData = [
+          {
+            tgl: "15 Nov 2024",
+            nama: "Lomba Essay Nasional",
+            kategori: "Kompetisi",
+            jenis: "Pilihan",
+            poin: 20,
+            status: "Valid",
+            ket: "-",
+          },
+          {
+            tgl: "11 Nov 2024",
+            nama: "Lomba Healthkaton",
+            kategori: "Kompetisi",
+            jenis: "Pilihan",
+            poin: 30,
+            status: "Valid",
+            ket: "-",
+          },
+          {
+            tgl: "05 Nov 2024",
+            nama: "Panitia Ospek",
+            kategori: "Organisasi",
+            jenis: "Wajib",
+            poin: 15,
+            status: "Valid",
+            ket: "-",
+          },
+          {
+            tgl: "01 Nov 2024",
+            nama: "Seminar Nasional AI",
+            kategori: "Seminar",
+            jenis: "Pilihan",
+            poin: 5,
+            status: "Valid",
+            ket: "-",
+          },
+          {
+            tgl: "20 Nov 2024",
+            nama: "Workshop Machine Learning",
+            kategori: "Seminar",
+            jenis: "Pilihan",
+            poin: 10,
+            status: "Tidak Valid",
+            ket: "Bukti buram",
+          },
+          {
+            tgl: "18 Nov 2024",
+            nama: "Ketua BEM Fakultas",
+            kategori: "Organisasi",
+            jenis: "Wajib",
+            poin: 50,
+            status: "Menunggu Validasi",
+            ket: "-",
+          },
+        ];
+      }
+
+      currentData.unshift(newItem);
+      localStorage.setItem("riwayatData", JSON.stringify(currentData));
+      localStorage.setItem("activeTab", "status"); // KUNCI: Set tab aktif
+
       const successModal = document.getElementById("successModal");
       if (successModal) {
         successModal.classList.remove("hidden");
-        successModal.style.display = "flex"; // Pastikan modal sukses tetap overlay
+        successModal.style.display = "flex";
       }
     });
   }

@@ -30,9 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       const email = emailInput.value.toLowerCase();
 
-      if (email.includes("admin")) {
-        alert("Login Berhasil sebagai ADMIN");
-        // window.location.href = 'dashboard-admin.html';
+      if (email.includes("unit")) {
+        alert("Login Berhasil sebagai ADMIN UNIT");
+        window.location.href = "unit-dashboard.html";
       } else {
         alert("Login Berhasil sebagai MAHASISWA");
         window.location.href = "dashboard-mahasiswa.html";

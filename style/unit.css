@@ -1,0 +1,681 @@
+/* --- LAYOUT UTAMA --- */
+.center-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.page-header-unit {
+  width: 100%;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+}
+.page-header-unit h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* --- IDENTITY CARD (DASHBOARD) --- */
+.unit-identity-card {
+  background-color: #d9d9d9;
+  padding: 30px 50px;
+  border-radius: 12px;
+  width: 600px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.identity-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.identity-item .label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.identity-item .value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+}
+
+/* --- STEP 1: PILIH KEGIATAN --- */
+.step-header-text {
+  margin-bottom: 25px;
+}
+.step-header-text h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+.step-header-text p {
+  font-size: 13px;
+  color: #666;
+}
+
+/* --- SEARCH BAR STYLING (MODERN) --- */
+
+.search-row {
+  margin-bottom: 25px;
+}
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Input Field */
+.search-wrapper input {
+  width: 100%;
+  height: 50px; /* Tinggi yang nyaman diklik */
+  padding: 12px 20px 12px 50px; /* Padding kiri besar untuk tempat icon */
+  font-size: 14px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #d1d5db; /* Abu-abu halus */
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  outline: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.search-wrapper input::placeholder {
+  color: #9ca3af; /* Abu-abu placeholder */
+}
+
+.search-wrapper input:focus {
+  border-color: #000; /* Hitam saat aktif */
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05); /* Glow halus */
+}
+
+/* Icon Positioning */
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Agar klik tembus ke input */
+  color: #6b7280;
+}
+
+.search-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2px;
+}
+
+/* Dropdown Hasil Search */
+.search-dropdown {
+  position: absolute;
+  top: 110%; /* Sedikit jarak dari input */
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 50;
+  max-height: 250px;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease;
+}
+
+.search-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.search-item:last-child {
+  border-bottom: none;
+}
+
+.search-item:hover {
+  background-color: #f9fafb;
+}
+
+.search-item strong {
+  display: block;
+  color: #111827;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.search-item small {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Helper hidden */
+.hidden {
+  display: none !important;
+}
+
+.search-unit-box {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-unit-box input {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+.search-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #000;
+  cursor: pointer;
+}
+
+.kegiatan-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.kegiatan-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+.kegiatan-card:hover {
+  border-color: #000;
+}
+.kegiatan-card input[type="radio"] {
+  display: none;
+} /* Hide radio asli */
+
+/* Style saat dipilih */
+.kegiatan-card:has(input:checked) {
+  border: 2px solid #000;
+  background-color: #f9f9f9;
+}
+
+.card-content h4 {
+  margin: 0 0 5px 0;
+  font-size: 15px;
+}
+.card-meta {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: #666;
+}
+.card-meta span {
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* --- STEP 2: INPUT PESERTA --- */
+.input-method-tabs {
+  display: flex;
+  background: #e0e0e0;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 25px;
+}
+.method-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  transition: 0.2s;
+}
+.method-tab small {
+  font-weight: 400;
+  font-size: 11px;
+  display: block;
+  margin-top: 2px;
+}
+.method-tab.active {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.method-content {
+  display: none;
+}
+.method-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Tabel Unit */
+.unit-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+.unit-table th {
+  background: #f5f5f5;
+  padding: 10px;
+  font-size: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+.unit-table td {
+  padding: 10px;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+.unit-table tr:last-child td {
+  border-bottom: none;
+}
+
+.table-footer-simple {
+  background: #e0e0e0;
+  padding: 8px 15px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 0 0 6px 6px;
+}
+
+/* CSV Upload */
+.csv-upload-box {
+  border: 2px dashed #999;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  background: #eee;
+}
+.csv-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+.btn-grey {
+  background: #666;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.download-link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #000;
+  text-decoration: underline;
+}
+
+/* --- STEP 3: BUKTI --- */
+.divider-text {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin: 15px 0;
+  position: relative;
+}
+.divider-text::before,
+.divider-text::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 45%;
+  height: 1px;
+  background: #ddd;
+}
+.divider-text::before {
+  left: 0;
+}
+.divider-text::after {
+  right: 0;
+}
+
+.btn-icon-add-black {
+  background: #000;
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+.file-card-mini {
+  background: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  position: relative;
+}
+.file-card-mini button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  background: none;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* --- PROGRESS BAR CUSTOM --- */
+.wizard-header.bottom-mode .step {
+  flex: 1;
+  text-align: center;
+}
+
+.wizard-footer.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.gap-20 {
+  gap: 20px;
+} /* Jarak antar tombol */
+
+/* Tombol Wide (Lebar) */
+.btn-black-wide {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 0;
+  width: 200px; /* Lebar fix agar rapi */
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-black-wide:hover {
+  background-color: #333;
+}
+
+.btn-outline-wide {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #000;
+  padding: 12px 0;
+  width: 200px; /* Lebar fix agar rapi */
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-outline-wide:hover {
+  background-color: #f5f5f5;
+  border-color: #000;
+}
+
+/* --- PROGRESS BAR UNIT (Solid Line Style) --- */
+.unit-progress-bar {
+  margin-top: 40px;
+  padding: 0 20px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background-color: #e0e0e0; /* Abu-abu track */
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #000; /* Hitam aktif */
+  border-radius: 3px;
+  transition: width 0.4s ease; /* Animasi smooth */
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.p-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 500;
+  flex: 1;
+  text-align: center; /* Label tengah masing-masing area */
+}
+
+.p-label.active {
+  color: #000;
+  font-weight: 700;
+}
+
+/* Penyesuaian text-align label agar pas di bawah garis imajiner */
+.p-label:first-child {
+  text-align: left;
+}
+.p-label:last-child {
+  text-align: right;
+}
+.p-label:nth-child(2) {
+  text-align: center;
+}
+
+.step-line-custom {
+  height: 4px;
+  background: #ccc;
+  border-radius: 2px;
+  margin-bottom: 5px;
+}
+.step.active .step-line-custom {
+  background: #000;
+}
+.step-label {
+  font-size: 10px;
+  color: #999;
+}
+.step.active .step-label {
+  color: #000;
+  font-weight: 700;
+}
+
+/* Style khusus untuk info jumlah CSV */
+#csvCountInfo {
+  background-color: #e0e0e0;
+  color: #333;
+  padding: 10px 15px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  border-radius: 0 0 8px 8px; /* Round di bawah saja, nempel sama kotak upload */
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Animasi checkmark */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- CSV UPLOAD SECTION --- */
+
+/* 1. Dashed Box */
+.csv-upload-container {
+  padding: 20px 0;
+}
+
+.csv-upload-box {
+  border: 2px dashed #999;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  background-color: #e5e5e5; /* Warna abu background box */
+}
+
+.csv-icon svg {
+  margin-bottom: 10px;
+  opacity: 0.6;
+}
+
+.csv-upload-box p {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 2. Tombol Pilih File (Grey Pill) */
+.btn-grey-pill {
+  background-color: #777;
+  color: #fff;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-grey-pill:hover {
+  background-color: #555;
+}
+
+/* 3. Download Link */
+.download-section {
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+.download-link-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #333;
+  text-decoration: underline;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 4. Hasil Upload (Total & Card) */
+.total-peserta-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+/* FILE CARD DESIGN */
+.file-card-wide {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  position: relative;
+  max-width: 400px; /* Batasi lebar agar rapi */
+}
+
+.file-icon-box {
+  width: 40px;
+  height: 40px;
+  background-color: #000;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.file-icon-box svg {
+  stroke: #fff;
+}
+
+.file-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.file-info .filename {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-info .filesize {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.btn-delete-card {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.btn-delete-card:hover {
+  background-color: #fce4e4;
+  color: #d32f2f;
+  border-color: #fce4e4;
+}

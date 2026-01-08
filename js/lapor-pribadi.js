@@ -1,157 +1,253 @@
 /* =========================================
-   LAPOR KEGIATAN PRIBADI (2 Step Wizard)
+   LAPOR KEGIATAN PRIBADI (Create & Edit Mode)
    ========================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
   // --- ELEMEN DOM ---
+  const formLapor = document.getElementById("formLapor");
   const jenisSelect = document.getElementById("jenisKegiatan");
   const detailSection = document.getElementById("detailSection");
+  const pageHeader = document.querySelector(".page-header");
+  const btnSubmit = document.querySelector("button[type='submit']");
+  const btnCancelEdit = document.getElementById("btnCancelEdit");
 
-  const groupPencapaian = document.getElementById("field-pencapaian");
-  const inputPencapaian = document.getElementById("pencapaian");
+  // --- CEK MODE EDIT ---
+  const editIndex = localStorage.getItem("editIndex");
+  let isEditMode = false;
 
-  const groupPeran = document.getElementById("field-peran");
-  const inputPeran = document.getElementById("peran");
+  // Init Listener untuk tombol Batal (Dipasang di awal)
+  if (btnCancelEdit) {
+    btnCancelEdit.addEventListener("click", function () {
+      localStorage.removeItem("editIndex");
+      window.location.href = "riwayat.html";
+    });
+  }
 
-  // 1. LOGIKA DINAMIS (Munculkan Form Detail & Toggle Required)
+  if (editIndex !== null) {
+    isEditMode = true;
+    loadEditData(editIndex);
+
+    // Munculkan Tombol Batal di Step 1
+    if (btnCancelEdit) btnCancelEdit.classList.remove("hidden");
+  }
+
+  // 1. FUNGSI LOAD DATA EDIT
+  function loadEditData(index) {
+    const storedData = JSON.parse(localStorage.getItem("riwayatData"));
+    if (!storedData || !storedData[index]) return;
+
+    const data = storedData[index];
+
+    // A. Ubah Tampilan Judul & Tombol
+    if (pageHeader) pageHeader.innerText = "Edit Laporan Kegiatan";
+    if (btnSubmit) btnSubmit.innerText = "Simpan Perubahan";
+
+    // B. Isi Dropdown Kategori & Jenis
+    if (data.kategori) {
+      document.getElementById("kategoriKegiatan").value =
+        data.kategori.toLowerCase();
+    }
+
+    // Mapping Jenis
+    let jenisValue = "kegiatan"; // default
+    if (data.jenis) {
+      jenisValue = data.jenis === "Wajib" ? "kegiatan" : "lomba";
+      document.getElementById("jenisKegiatan").value = jenisValue;
+    }
+
+    // --- UPDATE UTAMA DISINI ---
+    // C. Langsung Munculkan Detail Section (Force Show)
+    if (detailSection) {
+      detailSection.classList.remove("hidden");
+    }
+
+    // D. Atur Field Khusus (Pencapaian vs Peran) secara manual
+    const groupPencapaian = document.getElementById("field-pencapaian");
+    const groupPeran = document.getElementById("field-peran");
+
+    // Reset dulu (hide dua-duanya)
+    if (groupPencapaian) groupPencapaian.classList.add("hidden");
+    if (groupPeran) groupPeran.classList.add("hidden");
+
+    // Munculkan sesuai jenis yang di-load
+    if (jenisValue === "lomba") {
+      if (groupPencapaian) groupPencapaian.classList.remove("hidden");
+      // Jika Anda menyimpan data juara, set value-nya di sini
+      // document.getElementById("pencapaian").value = data.pencapaian;
+    } else {
+      if (groupPeran) groupPeran.classList.remove("hidden");
+      // Jika Anda menyimpan data peran, set value-nya di sini
+      // document.getElementById("peran").value = data.peran;
+    }
+
+    // E. Isi Data Text Lainnya
+    document.getElementById("namaKegiatan").value = data.nama;
+
+    // Konversi Tanggal
+    const dateParts = parseDateString(data.tgl);
+    document.getElementById("tanggalMulai").value = dateParts;
+  }
+
+  // Helper konversi tanggal
+  function parseDateString(dateStr) {
+    const months = {
+      Jan: "01",
+      Feb: "02",
+      Mar: "03",
+      Apr: "04",
+      May: "05",
+      Jun: "06",
+      Jul: "07",
+      Aug: "08",
+      Sep: "09",
+      Oct: "10",
+      Nov: "11",
+      Dec: "12",
+    };
+    if (!dateStr) return "";
+    const parts = dateStr.split(" ");
+    if (parts.length === 3) {
+      return `${parts[2]}-${months[parts[1]]}-${parts[0].padStart(2, "0")}`;
+    }
+    return "";
+  }
+
+  // 2. LOGIKA DINAMIS (Event Listener untuk perubahan manual user)
   if (jenisSelect) {
     jenisSelect.addEventListener("change", function () {
       const jenis = this.value;
+      const groupPencapaian = document.getElementById("field-pencapaian");
+      const groupPeran = document.getElementById("field-peran");
 
       // Buka Detail Section
       if (detailSection) detailSection.classList.remove("hidden");
 
-      // Reset tampilan
-      groupPencapaian.classList.add("hidden");
-      groupPeran.classList.add("hidden");
-
-      // Reset atribut required (agar tidak error saat validasi)
-      inputPencapaian.removeAttribute("required");
-      inputPeran.removeAttribute("required");
+      // Reset & Toggle Field Khusus
+      if (groupPencapaian) groupPencapaian.classList.add("hidden");
+      if (groupPeran) groupPeran.classList.add("hidden");
 
       if (jenis === "lomba") {
-        // Tampilkan Juara, Wajibkan isi Juara
-        groupPencapaian.classList.remove("hidden");
-        inputPencapaian.setAttribute("required", "true");
+        if (groupPencapaian) groupPencapaian.classList.remove("hidden");
       } else if (jenis === "kegiatan") {
-        // Tampilkan Peran, Wajibkan isi Peran
-        groupPeran.classList.remove("hidden");
-        inputPeran.setAttribute("required", "true");
+        if (groupPeran) groupPeran.classList.remove("hidden");
       }
     });
   }
 
-  // 2. NAVIGASI WIZARD (Validasi Manual JS)
+  // 3. NAVIGASI WIZARD
   window.goToStep = function (stepNumber) {
-    // VALIDASI DARI STEP 1 KE STEP 2
     if (stepNumber === 2) {
       const kategori = document.getElementById("kategoriKegiatan").value;
       const jenis = document.getElementById("jenisKegiatan").value;
       const nama = document.getElementById("namaKegiatan").value;
-      const lingkup = document.getElementById("lingkup").value;
-      const durasi = document.getElementById("durasi").value;
       const tglMulai = document.getElementById("tanggalMulai").value;
 
-      // Ambil elemen pencapaian/peran untuk cek validitas sesuai jenis
-      const isLomba = jenis === "lomba";
-      const valPencapaian = document.getElementById("pencapaian").value;
-      const valPeran = document.getElementById("peran").value;
-
-      // --- LOGIKA VALIDASI (SUDAH DI-UNCOMMENT) ---
       if (!kategori || !jenis) {
-        alert("Mohon pilih Kategori dan Jenis Kegiatan.");
+        alert("Mohon pilih Kategori dan Jenis.");
         return;
       }
-
       if (!nama) {
         alert("Mohon isi Nama Kegiatan.");
         return;
       }
-
-      // Validasi Kondisional (Lomba butuh Pencapaian, Kegiatan butuh Peran)
-      if (isLomba && !valPencapaian) {
-        alert("Mohon pilih Pencapaian/Juara.");
-        return;
-      }
-      if (!isLomba && !valPeran) {
-        alert("Mohon pilih Peran Anda.");
-        return;
-      }
-
-      if (!lingkup) {
-        alert("Mohon pilih Lingkup Kegiatan.");
-        return;
-      }
-
-      if (!durasi) {
-        alert("Mohon pilih Durasi Kegiatan.");
-        return;
-      }
-
       if (!tglMulai) {
-        alert("Mohon lengkapi Tanggal Mulai Kegiatan");
+        alert("Mohon isi Tanggal.");
         return;
       }
     }
 
-    // Pindah Tampilan Form (Jika lolos validasi)
     document
       .querySelectorAll(".wizard-step")
       .forEach((el) => el.classList.remove("active"));
     document.getElementById(`step-${stepNumber}`).classList.add("active");
 
-    // Update Progress Bar Indicator
     const indicator2 = document.getElementById("indicator-2");
     if (indicator2) {
-      if (stepNumber === 2) {
-        indicator2.classList.add("active");
-      } else {
-        indicator2.classList.remove("active");
-      }
+      stepNumber === 2
+        ? indicator2.classList.add("active")
+        : indicator2.classList.remove("active");
     }
-
-    // Scroll ke atas
-    document.querySelector(".form-card").scrollIntoView({ behavior: "smooth" });
   };
 
-  // 3. SUBMIT FORM
-  const formLapor = document.getElementById("formLapor");
-
+  // 4. SUBMIT FORM
   if (formLapor) {
     formLapor.addEventListener("submit", function (e) {
-      e.preventDefault(); // Mencegah reload halaman
+      e.preventDefault();
 
-      // Validasi Akhir (Opsional: Cek apakah file sudah ada)
-      const fileInput = document.getElementById("fileBukti");
-      const linkInput = document.getElementById("linkBukti");
-      // Cek apakah ada file terpilih ATAU link terisi (minimal salah satu)
-      // Note: Karena fileInput.value di-reset saat addToList, kita cek isi previewContainer
+      // Ambil Value
+      const nama = document.getElementById("namaKegiatan").value;
+      const kategoriVal = document.getElementById("kategoriKegiatan").value;
+      const jenisVal = document.getElementById("jenisKegiatan").value;
+      const tglInput = document.getElementById("tanggalMulai").value;
+
+      // Format Data
+      const dateObj = new Date(tglInput);
+      const tglFormatted = dateObj.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      const kategoriText =
+        kategoriVal.charAt(0).toUpperCase() + kategoriVal.slice(1);
+      let jenisText = "Wajib";
+      if (jenisVal === "lomba") jenisText = "Pilihan";
+
+      // Validasi File
       const previewContainer = document.getElementById("previewContainer");
       const hasItems =
         previewContainer.querySelectorAll(".file-item").length > 0;
 
-      if (!hasItems) {
-        alert("Mohon upload bukti kegiatan (File atau Link) minimal satu.");
+      if (!isEditMode && !hasItems) {
+        alert("Mohon upload bukti kegiatan.");
         return;
       }
 
-      // 1. Ambil Modal
-      const successModal = document.getElementById("successModal");
+      let currentData = JSON.parse(localStorage.getItem("riwayatData")) || [];
 
-      // 2. Tampilkan Modal
-      if (successModal) {
-        successModal.classList.remove("hidden");
-        successModal.style.display = "flex"; // Pastikan flex agar tengah
+      if (isEditMode) {
+        // --- UPDATE ---
+        const index = parseInt(editIndex);
+        currentData[index].nama = nama;
+        currentData[index].kategori = kategoriText;
+        currentData[index].jenis = jenisText;
+        currentData[index].tgl = tglFormatted;
+
+        localStorage.setItem("riwayatData", JSON.stringify(currentData));
+        localStorage.removeItem("editIndex");
+        alert("Perubahan berhasil disimpan!");
       } else {
-        alert("Laporan Berhasil Dikirim!");
+        // --- CREATE ---
+        const newItem = {
+          tgl: tglFormatted,
+          nama: nama,
+          kategori: kategoriText,
+          jenis: jenisText,
+          poin: 0,
+          status: "Menunggu Validasi",
+          ket: "-",
+        };
+        currentData.unshift(newItem);
+        localStorage.setItem("riwayatData", JSON.stringify(currentData));
+        localStorage.setItem("activeTab", "status");
+      }
+
+      // Success Modal
+      const successModal = document.getElementById("successModal");
+      if (successModal) {
+        if (isEditMode) {
+          successModal.querySelector("h3").innerText = "Data Diperbarui!";
+          successModal.querySelector("p").innerText =
+            "Data kegiatan Anda telah berhasil diperbarui.";
+        }
+        successModal.classList.remove("hidden");
+        successModal.style.display = "flex";
+      } else {
         window.location.href = "riwayat.html";
       }
     });
   }
 
-  /* =========================================
-     LOGIKA UPLOAD FILE & LINK
-     ========================================= */
+  // --- LOGIKA UPLOAD ---
   const uploadArea = document.getElementById("uploadArea");
   const fileInput = document.getElementById("fileBukti");
   const previewContainer = document.getElementById("previewContainer");
@@ -168,11 +264,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // --- HANDLING FILE UPLOAD ---
   if (uploadArea && fileInput) {
-    ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+    uploadArea.addEventListener("click", () => fileInput.click());
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
       uploadArea.addEventListener(
-        eventName,
+        evt,
         (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -180,32 +276,26 @@ document.addEventListener("DOMContentLoaded", function () {
         false
       );
     });
-
-    ["dragenter", "dragover"].forEach((eventName) => {
+    ["dragenter", "dragover"].forEach((evt) => {
       uploadArea.addEventListener(
-        eventName,
+        evt,
         () => uploadArea.classList.add("dragover"),
         false
       );
     });
-
-    ["dragleave", "drop"].forEach((eventName) => {
+    ["dragleave", "drop"].forEach((evt) => {
       uploadArea.addEventListener(
-        eventName,
+        evt,
         () => uploadArea.classList.remove("dragover"),
         false
       );
     });
 
-    uploadArea.addEventListener(
-      "drop",
-      (e) => {
-        const files = e.dataTransfer.files;
-        fileInput.files = files;
-        addFileToList(files[0]);
-      },
-      false
-    );
+    uploadArea.addEventListener("drop", (e) => {
+      const files = e.dataTransfer.files;
+      fileInput.files = files;
+      addFileToList(files[0]);
+    });
 
     fileInput.addEventListener("change", function () {
       if (this.files.length > 0) addFileToList(this.files[0]);
@@ -214,43 +304,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function addFileToList(file) {
     if (!file) return;
-    const iconDoc = `<svg class="icon-file" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`;
-
     const itemHtml = document.createElement("div");
     itemHtml.className = "file-item";
-    itemHtml.innerHTML = `
-        <div class="file-item-content">
-            ${iconDoc}
-            <span>${file.name} (${(file.size / 1024).toFixed(1)} KB)</span>
-        </div>
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove(); checkListEmpty();">×</button>
-    `;
+    itemHtml.innerHTML = `<span>📄 ${file.name}</span><button type="button" class="remove-btn" onclick="this.parentElement.remove(); checkListEmpty();">×</button>`;
     previewContainer.appendChild(itemHtml);
     checkEmptyState();
   }
 
-  // --- FUNGSI NAMBAH LINK KE LIST ---
-  if (btnAddLink && linkInput) {
+  if (btnAddLink) {
     btnAddLink.addEventListener("click", function () {
-      const url = linkInput.value.trim();
-      if (!url) {
-        alert("Mohon masukkan link terlebih dahulu!");
-        return;
+      const url = linkInput.value;
+      if (url) {
+        const itemHtml = document.createElement("div");
+        itemHtml.className = "file-item";
+        itemHtml.innerHTML = `<span>🔗 ${url}</span><button type="button" class="remove-btn" onclick="this.parentElement.remove(); checkListEmpty();">×</button>`;
+        previewContainer.appendChild(itemHtml);
+        checkEmptyState();
+        linkInput.value = "";
       }
-      const iconLink = `<svg class="icon-link" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
-
-      const itemHtml = document.createElement("div");
-      itemHtml.className = "file-item";
-      itemHtml.innerHTML = `
-            <div class="file-item-content">
-                ${iconLink}
-                <span title="${url}">Link: ${url}</span>
-            </div>
-            <button type="button" class="remove-btn" onclick="this.parentElement.remove(); checkListEmpty();">×</button>
-        `;
-      previewContainer.appendChild(itemHtml);
-      checkEmptyState();
-      linkInput.value = "";
     });
   }
 

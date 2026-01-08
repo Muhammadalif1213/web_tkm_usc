@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lapor Kegiatan Unit - Sistem TKM</title>
+    <link rel="stylesheet" href="/style/style.css" />
+    <link rel="stylesheet" href="/style/laporstyle.css" />
+    <link rel="stylesheet" href="/style/unit.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Sistem TKM</h2>
+          <p>Universitas Surya Cemerlang</p>
+        </div>
+        <nav class="sidebar-menu">
+          <ul>
+            <li><a href="unit-dashboard.html">Dashboard</a></li>
+            <li class="active">
+              <a href="unit-lapor.html">Lapor Kegiatan Unit</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="sidebar-footer">
+          <button class="btn-logout" onclick="logoutUnit()">Keluar</button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <h2 class="page-header">Lapor Kegiatan Admin Unit</h2>
+
+        <div class="form-card">
+          <form id="formUnit">
+            <div class="wizard-step active" id="step-1">
+              <div class="step-header-text">
+                <h3>Pilih Kegiatan</h3>
+                <p>Pilih satu kegiatan yang akan dilaporkan oleh unit anda</p>
+              </div>
+
+              <div class="search-unit-box">
+                <input
+                  type="text"
+                  id="searchKegiatan"
+                  placeholder="Cari nama Kegiatan unit anda di sini..."
+                  onkeyup="filterKegiatan()"
+                />
+                <button type="button" class="search-btn">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="kegiatan-list-container" id="kegiatanList">
+                <label class="kegiatan-card">
+                  <input
+                    type="radio"
+                    name="selectedKegiatan"
+                    value="MATAF"
+                    checked
+                  />
+                  <div class="card-content">
+                    <h4>MATAF (Masa Ta'aruf)</h4>
+                    <div class="card-meta">
+                      <span>ID: DUBEMU_001</span
+                      ><span>Kategori: Orientasi</span>
+                    </div>
+                  </div>
+                </label>
+                <label class="kegiatan-card">
+                  <input type="radio" name="selectedKegiatan" value="BAKSOS" />
+                  <div class="card-content">
+                    <h4>Bakti Sosial Raya</h4>
+                    <div class="card-meta">
+                      <span>ID: DUBEMU_002</span
+                      ><span>Kategori: Pengabdian</span>
+                    </div>
+                  </div>
+                </label>
+                <label class="kegiatan-card">
+                  <input type="radio" name="selectedKegiatan" value="SEMINAR" />
+                  <div class="card-content">
+                    <h4>Seminar Nasional Kepemimpinan</h4>
+                    <div class="card-meta">
+                      <span>ID: DUBEMU_003</span
+                      ><span>Kategori: Pendidikan</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="wizard-footer center">
+                <button
+                  type="button"
+                  class="btn-black-wide"
+                  onclick="goToStep(2)"
+                >
+                  Selanjutnya &rarr;
+                </button>
+              </div>
+            </div>
+
+            <div class="wizard-step" id="step-2">
+              <div class="step-header-text">
+                <h3>Pilih Metode Input Peserta</h3>
+                <p>
+                  Gunakan salah satu metode berikut untuk menginputkan data
+                  peserta kegiatan unit
+                </p>
+              </div>
+
+              <div class="input-method-tabs">
+                <button
+                  type="button"
+                  class="method-tab active"
+                  onclick="switchMethod('manual')"
+                >
+                  Input Manual (NIM)<br /><small>Untuk Peserta (<20)</small>
+                </button>
+                <button
+                  type="button"
+                  class="method-tab"
+                  onclick="switchMethod('csv')"
+                >
+                  Import CSV<br /><small>Untuk Peserta (>=20)</small>
+                </button>
+              </div>
+
+              <div id="method-manual" class="method-content active">
+                <div class="search-row">
+                  <div class="search-wrapper">
+                    <div class="search-icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      id="inputNIM"
+                      placeholder="Cari Anggota berdasarkan NIM / Nama mahasiswa..."
+                      autocomplete="off"
+                    />
+                    <div
+                      id="dropdownManual"
+                      class="search-dropdown hidden"
+                    ></div>
+                  </div>
+                </div>
+                <table class="unit-table">
+                  <thead>
+                    <tr>
+                      <th width="10%">No</th>
+                      <th width="25%">NIM</th>
+                      <th width="35%">Nama Mahasiswa</th>
+                      <th width="20%">Jurusan</th>
+                      <th width="10%" class="text-center">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="manualTableBody">
+                    <tr>
+                      <td
+                        colspan="5"
+                        style="text-align: center; padding: 30px; color: #999"
+                      >
+                        Belum ada peserta yang ditambahkan.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="table-footer-simple">
+                  Total Peserta: <span id="countManual">0</span>
+                </div>
+              </div>
+
+              <div id="method-csv" class="method-content">
+                <div class="csv-upload-container">
+                  <div class="csv-upload-box">
+                    <div class="csv-icon">
+                      <svg
+                        width="40"
+                        height="40"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#666"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                        ></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                    </div>
+                    <p>
+                      Upload file CSV yang berisi NIM, Nama, dan Jurusan
+                      mahasiswa
+                    </p>
+                    <button
+                      type="button"
+                      class="btn-grey-pill"
+                      onclick="document.getElementById('fileCSV').click()"
+                    >
+                      Pilih File CSV
+                    </button>
+                    <input
+                      type="file"
+                      id="fileCSV"
+                      accept=".csv"
+                      hidden
+                      onchange="handleCSV(this)"
+                    />
+                  </div>
+                </div>
+                <div class="download-section">
+                  <a
+                    href="#"
+                    class="download-link-icon"
+                    onclick="downloadCSVTemplate()"
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                      ></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Format CSV
+                  </a>
+                </div>
+                <div id="csvResultContainer" class="hidden">
+                  <h4 class="total-peserta-text">
+                    Total Peserta: <span id="countCSVValue">0</span>
+                  </h4>
+                  <div class="file-card-wide">
+                    <div class="file-icon-box">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                        ></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                      </svg>
+                    </div>
+                    <div class="file-info">
+                      <span class="filename" id="csvFileName">data.csv</span
+                      ><span class="filesize" id="csvFileSize">0 MB</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn-delete-card"
+                      onclick="clearCSV()"
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="3"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wizard-footer center gap-20">
+                <button
+                  type="button"
+                  class="btn-outline-wide"
+                  onclick="goToStep(1)"
+                >
+                  &larr; Kembali
+                </button>
+                <button
+                  type="button"
+                  class="btn-black-wide"
+                  onclick="goToStep(3)"
+                >
+                  Selanjutnya &rarr;
+                </button>
+              </div>
+            </div>
+
+            <div class="wizard-step" id="step-3">
+              <div class="step-header-text">
+                <h3>Upload Bukti Kegiatan</h3>
+                <p>Upload dokumentasi pelaksanaan kegiatan unit Anda</p>
+              </div>
+
+              <div class="input-group">
+                <label>Upload File</label>
+                <div
+                  class="upload-area"
+                  id="uploadAreaUnit"
+                  onclick="document.getElementById('fileBuktiUnit').click()"
+                >
+                  <div class="upload-icon">
+                    <svg
+                      width="40"
+                      height="40"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                      ></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  </div>
+                  <p id="uploadTextUnit">
+                    <b>Klik untuk upload</b> atau drag and drop
+                  </p>
+                  <small class="hint"
+                    >JPG, JPEG, PNG, WebP (Maksimal 5MB per file)</small
+                  >
+                  <input
+                    type="file"
+                    id="fileBuktiUnit"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    hidden
+                  />
+                </div>
+              </div>
+              <div class="input-group">
+                <label>Link Bukti (Opsional)</label>
+                <div class="input-with-button">
+                  <div
+                    class="form-row"
+                    style="
+                      width: 100%;
+                      grid-template-columns: 1fr auto;
+                      gap: 10px;
+                      margin-bottom: 0;
+                    "
+                  >
+                    <input
+                      type="url"
+                      id="linkBuktiUnit"
+                      placeholder="https://..."
+                    />
+                    <button
+                      type="button"
+                      class="btn-icon-add"
+                      id="btnAddLinkUnit"
+                      title="Tambahkan Link"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>List Bukti</label>
+                <div id="previewContainerUnit">
+                  <p class="hint" id="emptyTextUnit" style="margin-top: 0">
+                    Belum ada bukti yang dipilih
+                  </p>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>Keterangan Tambahan</label>
+                <textarea
+                  rows="3"
+                  placeholder="Tambahkan catatan..."
+                ></textarea>
+              </div>
+
+              <div class="wizard-footer center gap-20">
+                <button
+                  type="button"
+                  class="btn-outline-wide"
+                  onclick="goToStep(2)"
+                >
+                  &larr; Kembali
+                </button>
+                <button type="submit" class="btn-black-wide">
+                  Kirim Laporan
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <div class="unit-progress-bar">
+            <div class="progress-track">
+              <div
+                class="progress-fill"
+                id="progressFill"
+                style="width: 33%"
+              ></div>
+            </div>
+            <div class="progress-labels">
+              <span class="p-label active" id="lbl-1"
+                >Halaman 1: Pilih Kegiatan</span
+              >
+              <span class="p-label" id="lbl-2"
+                >Halaman 2: Tambah Mahasiswa</span
+              >
+              <span class="p-label" id="lbl-3">Halaman 3: Upload Bukti</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/unit.js"></script>
+    <script>
+      function logoutUnit() {
+        if (confirm("Keluar dari Admin Unit?"))
+          window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>
