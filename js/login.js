@@ -33,6 +33,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (email.includes("unit")) {
         alert("Login Berhasil sebagai ADMIN UNIT");
         window.location.href = "unit-dashboard.html";
+      } else if (email.includes("dosen")) {
+        alert("Login Berhasil sebagai ADMIN DOSEN");
+        window.location.href = "dosen/index.html";
       } else {
         alert("Login Berhasil sebagai MAHASISWA");
         window.location.href = "dashboard-mahasiswa.html";

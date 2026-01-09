@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Validasi Kegiatan Mahasiswa</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-box">
+            <h2>Dosen</h2>
+            <p>Universitas Surya Cemerlang</p>
+        </div>
+        <ul class="nav-menu">
+            <li class="active" onclick="location.href='index.html'">Dashboard</li>
+            <li onclick="location.href='daftarmhsbimbingan.html'">Pemantauan Nilai</li>
+            <li onclick="location.href='laporpelanggaran.html'">Lapor Pelanggaran</li>
+            <li>Keluar</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <h1 class="page-title">Validasi Kegiatan Mahasiswa</h1>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Mahasiswa</th>
+                        <th>NIM</th>
+                        <th>Nama Kegiatan</th>
+                        <th class="text-center">Jenis Kegiatan</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+
+            <div class="pagination-bar" id="pagination-controls"></div>
+        </div>
+    </main>
+
+    <script>
+        const dataMahasiswa = [
+            { nama: "Ahmad Fauzi Pratama", nim: "20210801045", kegiatan: "Kuliah Kerja Nyata (KKN)", jenis: "Wajib" },
+            { nama: "Siti Aminah Rahayu", nim: "20210801012", kegiatan: "Kerja Praktek (KP)", jenis: "Wajib" },
+            { nama: "Budi Santoso Sudirman", nim: "20200801099", kegiatan: "Seminar Proposal Skripsi", jenis: "Wajib" },
+            { nama: "Rina Wijaya Kusuma", nim: "20220801033", kegiatan: "Praktikum Fisika Dasar", jenis: "Wajib" },
+            { nama: "Fajar Nugroho Jati", nim: "20210801056", kegiatan: "Magang Industri (MBKM)", jenis: "Wajib" },
+            { nama: "Dewi Lestari Putri", nim: "20230801021", kegiatan: "KKN Tematik Desa", jenis: "Wajib" },
+            { nama: "Eko Prasetyo Utomo", nim: "20200801088", kegiatan: "Seminar Hasil Penelitian", jenis: "Wajib" },
+            { nama: "Maya Indah Permata", nim: "20220801005", kegiatan: "Skripsi Tahap Akhir", jenis: "Wajib" },
+            { nama: "Rizky Ramadhan Hakim", nim: "20210801077", kegiatan: "Webinar AI Nasional", jenis: "Pilihan" },
+            { nama: "Anisa Fitriani Salim", nim: "20230801044", kegiatan: "Volunteer Bakti Sosial", jenis: "Pilihan" },
+            { nama: "Hendra Gunawan", nim: "20210801090", kegiatan: "Lomba Debat Bahasa", jenis: "Pilihan" },
+            { nama: "Siska Putri Utami", nim: "20210801101", kegiatan: "Workshop Mobile Dev", jenis: "Pilihan" },
+            { nama: "Rully Anwar Hakim", nim: "20210801105", kegiatan: "Paduan Suara Kampus", jenis: "Pilihan" },
+            { nama: "Dina Maria Ulfa", nim: "20210801110", kegiatan: "Relawan Donor Darah", jenis: "Pilihan" },
+            { nama: "Taufik Hidayatullah", nim: "20210801115", kegiatan: "Seminar Enterpreneur", jenis: "Pilihan" },
+            { nama: "Irfan Bachdim Putra", nim: "20210801120", kegiatan: "Sertifikasi AWS Cloud", jenis: "Pilihan" },
+            { nama: "Gita Gutawa Sari", nim: "20210801125", kegiatan: "Lomba Vokal Solo", jenis: "Pilihan" },
+            { nama: "Kevin Sanjaya M.", nim: "20210801130", kegiatan: "UKM Bulutangkis", jenis: "Pilihan" },
+            { nama: "Greysia Polii R.", nim: "20210801135", kegiatan: "Volunteer Dies Natalis", jenis: "Pilihan" },
+            { nama: "Jonatan Christie W.", nim: "20210801140", kegiatan: "Kursus Bahasa Inggris", jenis: "Pilihan" }
+        ];
+
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        function displayTable(page) {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = "";
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = dataMahasiswa.slice(start, end);
+
+            paginatedData.forEach(item => {
+                const row = document.createElement('tr');
+                const jenisClass = item.jenis === 'Wajib' ? 'status-wajib' : 'status-pilihan';
+
+                row.innerHTML = `
+                    <td>${item.nama}</td>
+                    <td>${item.nim}</td>
+                    <td>${item.kegiatan}</td>
+                    <td class="${jenisClass} text-center">${item.jenis}</td>
+                    <td class="text-center">
+                        <button class="action-btn" onclick="location.href='detailkegiatan.html'">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function setupPagination() {
+            const paginationControls = document.getElementById('pagination-controls');
+            paginationControls.innerHTML = "";
+            const pageCount = Math.ceil(dataMahasiswa.length / rowsPerPage);
+
+            // Tombol Sebelumnya
+            const prevBtn = document.createElement('a');
+            prevBtn.innerHTML = `
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg> Sebelumnya`;
+            prevBtn.className = "page-nav";
+            prevBtn.href = "#";
+            prevBtn.onclick = (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateUI();
+                }
+            };
+            paginationControls.appendChild(prevBtn);
+
+            // Angka Halaman
+            const pageNumbers = document.createElement('div');
+            pageNumbers.className = "page-numbers";
+
+            for (let i = 1; i <= pageCount; i++) {
+                const btn = document.createElement('span');
+                btn.innerText = i;
+                btn.className = i === currentPage ? "page-num active" : "page-num";
+                btn.onclick = () => {
+                    currentPage = i;
+                    updateUI();
+                };
+                pageNumbers.appendChild(btn);
+            }
+            paginationControls.appendChild(pageNumbers);
+
+            // Tombol Selanjutnya
+            const nextBtn = document.createElement('a');
+            nextBtn.innerHTML = `Selanjutnya 
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                </svg>`;
+            nextBtn.className = "page-nav";
+            nextBtn.href = "#";
+            nextBtn.onclick = (e) => {
+                e.preventDefault();
+                if (currentPage < pageCount) {
+                    currentPage++;
+                    updateUI();
+                }
+            };
+            paginationControls.appendChild(nextBtn);
+        }
+
+        function updateUI() {
+            displayTable(currentPage);
+            setupPagination();
+            window.scrollTo(0, 0);
+        }
+
+        updateUI();
+    </script>
+</body>
+
+</html>

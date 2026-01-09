@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Mahasiswa Bimbingan</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="profile-box">
+            <h2>Dosen</h2>
+            <p>Universitas Surya Cemerlang</p>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="location.href='index.html'">Dashboard</li>
+            <li class="active" onclick="location.href='daftarmhsbimbingan.html'">Pemantauan Nilai</li>
+            <li onclick="location.href='laporpelanggaran.html'">Lapor Pelanggaran</li>
+            <li>Keluar</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <a href="daftarmhsbimbingan.html" class="back-link">
+            <svg class="icon-svg" viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+            Kembali
+        </a>
+
+        <h1 class="page-title">Detail Mahasiswa Bimbingan</h1>
+
+        <section class="card profile-card">
+            <div class="photo-placeholder"></div>
+            <div class="profile-details">
+                <h3>Ahmad Fauzi Pratama</h3>
+                <p>NIM : 20210801045</p>
+                <p>Angkatan : 2021</p>
+                <br>
+                <p class="text-muted">Dosen Pembimbing:</p>
+                <p><strong>Dr. Ir. Budi Santoso, M.T.</strong></p>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">Daftar Kegiatan</div>
+            <div class="card-body">
+                <table class="bukti-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Kegiatan</th>
+                            <th>Jenis Kegiatan</th>
+                            <th>Nilai</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Lorem Ipsum</td>
+                            <td class="status-wajib">Wajib</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Lorem Ipsum</td>
+                            <td class="status-wajib">Wajib</td>
+                            <td>00</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Lorem Ipsum</td>
+                            <td class="status-pilihan">Pilihan</td>
+                            <td>00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="summary-grid">
+            <div class="card">
+                <div class="card-header text-center">Poin TKM</div>
+                <div class="card-body">
+                    <p>Terkumpul <span class="float-right status-wajib">00 / 100</span></p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;"></div>
+                    </div>
+                    <div class="info-row mt-10">
+                        <div class="info-label">Target Minimal</div>
+                        <div>100</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Kegiatan Wajib</div>
+                        <div style="cursor: pointer;" onclick="location.href='kegiatanwjbbelum.html'">0/0 ></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header text-center">Pelanggaran</div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Jumlah pelanggaran</div>
+                        <div>0 Kasus</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Total Poin Pengurangan</div>
+                        <div class="status-wajib">-00 Poin</div>
+                    </div>
+                    <a onclick="location.href='daftarlaporan.html'" class="float-right text-muted mt-10">Selengkapnya ></a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

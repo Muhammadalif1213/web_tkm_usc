@@ -3,19 +3,11 @@
    ========================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
-  // --- FITUR BARU: DOWNLOAD TEMPLATE CSV ---
-  const downloadLink = document.querySelector(".download-link");
+  // --- PERBAIKAN DI SINI ---
+  // Ubah function biasa menjadi window.function agar bisa dipanggil dari HTML (onclick)
 
-  if (downloadLink) {
-    downloadLink.addEventListener("click", function (e) {
-      e.preventDefault(); // Mencegah link navigasi standar (href="#")
-      downloadCSVTemplate();
-    });
-  }
-
-  function downloadCSVTemplate() {
+  window.downloadCSVTemplate = function () {
     // 1. Tentukan Header & Data Contoh
-    // Format CSV: Header dipisah koma, baris baru dengan \n
     const headers = ["NIM", "Nama Mahasiswa", "Jurusan"];
     const rows = [
       ["20220140001", "Contoh Mahasiswa 1", "Teknologi Informasi"],
@@ -44,7 +36,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.appendChild(link);
     link.click(); // Klik otomatis
     document.body.removeChild(link); // Hapus setelah klik
-  }
+  };
+
+  // (Bagian event listener .download-link yang lama dihapus saja karena sudah pakai onclick di HTML)
 
   // 1. DATA DUMMY MAHASISWA (Untuk Search Manual)
   const dbMahasiswa = [
@@ -95,13 +89,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 3. TAB SWITCHER (MANUAL vs CSV)
   window.switchMethod = function (method) {
-    // Update Buttons
     document
       .querySelectorAll(".method-tab")
       .forEach((btn) => btn.classList.remove("active"));
     event.currentTarget.classList.add("active");
 
-    // Update Content
     document
       .querySelectorAll(".method-content")
       .forEach((el) => el.classList.remove("active"));
@@ -143,17 +135,14 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function addPeserta(m) {
-    // Cek duplikat
     if (pesertaList.find((p) => p.nim === m.nim)) {
       alert("Mahasiswa sudah ada di list!");
       dropdown.classList.add("hidden");
       inputNIM.value = "";
       return;
     }
-
     pesertaList.push(m);
     renderTable();
-
     dropdown.classList.add("hidden");
     inputNIM.value = "";
   }
@@ -163,12 +152,12 @@ document.addEventListener("DOMContentLoaded", function () {
     pesertaList.forEach((p, idx) => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-                <td>${idx + 1}</td>
-                <td>${p.nim}</td>
-                <td>${p.nama}</td>
-                <td>${p.prodi}</td>
-                <td class="text-center"><button type="button" class="remove-btn" onclick="removePeserta(${idx})">×</button></td>
-            `;
+            <td>${idx + 1}</td>
+            <td>${p.nim}</td>
+            <td>${p.nama}</td>
+            <td>${p.prodi}</td>
+            <td class="text-center"><button type="button" class="remove-btn" onclick="removePeserta(${idx})">×</button></td>
+        `;
       tbody.appendChild(tr);
     });
     countEl.innerText = pesertaList.length;
@@ -180,7 +169,6 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   // 5. CSV HANDLING
-  // Pastikan fungsi ini ada agar UX nya nyambung
   window.handleCSV = function (input) {
     if (input.files.length > 0) {
       const file = input.files[0];
@@ -197,10 +185,8 @@ document.addEventListener("DOMContentLoaded", function () {
       // B. Hitung Ukuran File (Bytes -> KB -> MB)
       let sizeText = "";
       if (file.size < 1024 * 1024) {
-        // Jika di bawah 1MB, tampilkan KB
         sizeText = (file.size / 1024).toFixed(1) + " KB";
       } else {
-        // Jika di atas 1MB, tampilkan MB
         sizeText = (file.size / (1024 * 1024)).toFixed(1) + " MB";
       }
       fileSizeEl.innerText = sizeText;
@@ -224,13 +210,78 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   window.clearCSV = function () {
-    // Reset Input
     document.getElementById("fileCSV").value = "";
-
-    // Sembunyikan Container
     document.getElementById("csvResultContainer").classList.add("hidden");
   };
 
+  // --- 5B. CSV DRAG & DROP LOGIC ---
+  const csvDropZone = document.querySelector(".csv-upload-box");
+  const csvInput = document.getElementById("fileCSV");
+
+  if (csvDropZone && csvInput) {
+    // 1. Klik area box untuk memicu input file (Opsional, agar area klik lebih luas)
+    csvDropZone.addEventListener("click", (e) => {
+      // Cek jika yang diklik BUKAN tombol (karena tombol sudah punya onclick sendiri)
+      if (e.target.tagName !== "BUTTON") {
+        csvInput.click();
+      }
+    });
+
+    // 2. Prevent Default Browser Behavior (Mencegah file dibuka di tab baru)
+    ["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
+      csvDropZone.addEventListener(
+        evt,
+        (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        },
+        false
+      );
+    });
+
+    // 3. Visual Feedback (Highlight saat file masuk area)
+    ["dragenter", "dragover"].forEach((evt) => {
+      csvDropZone.addEventListener(
+        evt,
+        () => {
+          csvDropZone.classList.add("dragover");
+        },
+        false
+      );
+    });
+
+    // 4. Hapus Highlight (Saat file keluar area atau di-drop)
+    ["dragleave", "drop"].forEach((evt) => {
+      csvDropZone.addEventListener(
+        evt,
+        () => {
+          csvDropZone.classList.remove("dragover");
+        },
+        false
+      );
+    });
+
+    // 5. HANDLE FILE DROP
+    csvDropZone.addEventListener("drop", (e) => {
+      const files = e.dataTransfer.files;
+
+      // Pastikan ada file dan formatnya CSV
+      if (files.length > 0) {
+        const file = files[0];
+        if (file.type === "text/csv" || file.name.endsWith(".csv")) {
+          // Assign file ke input elemen agar logic handleCSV bisa jalan
+          csvInput.files = files;
+
+          // Panggil fungsi processing yang sudah kita buat sebelumnya
+          window.handleCSV(csvInput);
+        } else {
+          alert("Mohon upload file dengan format .csv");
+        }
+      }
+    });
+  }
+
+  // 6. UPLOAD BUKTI (Link & File)
   window.addLinkUnit = function () {
     const url = document.getElementById("linkUnit").value;
     if (url) {
@@ -239,14 +290,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  function addToPreview(text) {
-    const div = document.createElement("div");
-    div.className = "file-card-mini";
-    div.innerHTML = `<span>${text}</span><button type="button" onclick="this.parentElement.remove()">×</button>`;
-    previewGrid.appendChild(div);
-  }
-
-  // 6. UPLOAD BUKTI (ADVANCED - SAMA DENGAN MAHASISWA)
   const uploadAreaUnit = document.getElementById("uploadAreaUnit");
   const fileInputUnit = document.getElementById("fileBuktiUnit");
   const previewContainerUnit = document.getElementById("previewContainerUnit");
@@ -254,7 +297,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const linkInputUnit = document.getElementById("linkBuktiUnit");
   const emptyTextUnit = document.getElementById("emptyTextUnit");
 
-  // Fungsi Cek List Kosong
   function checkUnitEmptyState() {
     const items = previewContainerUnit.querySelectorAll(".file-item");
     if (items.length > 0) {
@@ -264,9 +306,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // A. Handle File Upload (Drag & Drop + Click)
+  // Handle File Upload (Drag & Drop + Click)
   if (uploadAreaUnit && fileInputUnit) {
-    // Prevent default browser behavior
     ["dragenter", "dragover", "dragleave", "drop"].forEach((evt) => {
       uploadAreaUnit.addEventListener(
         evt,
@@ -278,7 +319,6 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     });
 
-    // Highlight saat drag
     ["dragenter", "dragover"].forEach((evt) => {
       uploadAreaUnit.addEventListener(
         evt,
@@ -287,7 +327,6 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     });
 
-    // Remove highlight saat leave/drop
     ["dragleave", "drop"].forEach((evt) => {
       uploadAreaUnit.addEventListener(
         evt,
@@ -296,14 +335,12 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     });
 
-    // Handle File Drop
     uploadAreaUnit.addEventListener("drop", (e) => {
       const files = e.dataTransfer.files;
-      fileInputUnit.files = files; // Update input file
+      fileInputUnit.files = files;
       addFileToUnitPreview(files[0]);
     });
 
-    // Handle File Click Select
     fileInputUnit.addEventListener("change", function () {
       if (this.files.length > 0) addFileToUnitPreview(this.files[0]);
     });
@@ -312,9 +349,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function addFileToUnitPreview(file) {
     if (!file) return;
     const iconDoc = `<svg style="color:#64748b" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`;
-
     const itemHtml = document.createElement("div");
-    itemHtml.className = "file-item"; // Class style sama dgn mhs
+    itemHtml.className = "file-item";
     itemHtml.innerHTML = `
             <div class="file-item-content">
                 ${iconDoc}
@@ -326,7 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
     checkUnitEmptyState();
   }
 
-  // B. Handle Link Add
+  // Handle Link Add via Button Click
   if (btnAddLinkUnit && linkInputUnit) {
     btnAddLinkUnit.addEventListener("click", function () {
       const url = linkInputUnit.value.trim();
@@ -334,9 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
         alert("Mohon masukkan link terlebih dahulu.");
         return;
       }
-
       const iconLink = `<svg style="color:#6366f1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>`;
-
       const itemHtml = document.createElement("div");
       itemHtml.className = "file-item";
       itemHtml.innerHTML = `
@@ -348,11 +382,15 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
       previewContainerUnit.appendChild(itemHtml);
       checkUnitEmptyState();
-      linkInputUnit.value = ""; // Reset input
+      linkInputUnit.value = "";
     });
   }
 
-  // Global helper for onclick HTML
+  window.addToPreview = function (text) {
+    // Helper function if needed by other parts, though specific file/link handlers above are better
+    // Biarkan kosong atau sesuaikan jika masih dipakai
+  };
+
   window.checkListUnitEmpty = function () {
     setTimeout(checkUnitEmptyState, 50);
   };

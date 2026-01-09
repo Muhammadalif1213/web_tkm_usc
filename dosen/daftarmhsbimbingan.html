@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Mahasiswa Bimbingan - Panel Dosen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-box">
+            <h2>Dosen</h2>
+            <p>Universitas Surya Cemerlang</p>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="location.href='index.html'">Dashboard</li>
+            <li class="active" onclick="location.href='daftarmhsbimbingan.html'">Pemantauan Nilai</li>
+            <li onclick="location.href='laporpelanggaran.html'">Lapor Pelanggaran</li>
+            <li>Keluar</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+
+        <h1 class="page-title">Daftar Mahasiswa Bimbingan</h1>
+
+        <div class="filter-controls">
+            <div class="filter-group">
+                <select class="dropdown-filter" id="angkatanFilter">
+                    <option value="">Angkatan</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nama Mahasiswa</th>
+                        <th>NIM</th>
+                        <th class="text-center">Nilai Total</th>
+                        <th class="text-center">Jumlah Pelanggaran</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="mhs-table-body">
+                </tbody>
+            </table>
+
+            <div id="pagination-controls" class="pagination-bar"></div>
+        </div>
+    </main>
+
+    <script>
+        // Konfigurasi Pagination diubah menjadi 10
+        const rowsPerPage = 10
+        let currentPage = 1
+
+        const mahasiswa = [
+            { nama: "Ahmad Fauzi Pratama", nim: "20210801045", nilai: "85.50", pelanggaran: "00" },
+            { nama: "Siti Aminah Rahayu", nim: "20210801012", nilai: "90.00", pelanggaran: "01" },
+            { nama: "Budi Santoso Sudirman", nim: "20200801099", nilai: "78.25", pelanggaran: "00" },
+            { nama: "Rina Wijaya Kusuma", nim: "20220801033", nilai: "88.10", pelanggaran: "02" },
+            { nama: "Fajar Nugroho Jati", nim: "20210801056", nilai: "82.40", pelanggaran: "00" },
+            { nama: "Dewi Lestari Putri", nim: "20230801021", nilai: "92.00", pelanggaran: "00" },
+            { nama: "Eko Prasetyo Utomo", nim: "20200801088", nilai: "75.00", pelanggaran: "03" },
+            { nama: "Maya Indah Permata", nim: "20220801005", nilai: "89.50", pelanggaran: "00" },
+            { nama: "Rizky Ramadhan Hakim", nim: "20210801077", nilai: "80.00", pelanggaran: "00" },
+            { nama: "Anisa Fitriani Salim", nim: "20230801044", nilai: "87.00", pelanggaran: "00" },
+            { nama: "Hendra Gunawan", nim: "20210801090", nilai: "83.20", pelanggaran: "01" },
+            { nama: "Siska Putri Utami", nim: "20210801101", nilai: "88.50", pelanggaran: "00" },
+            { nama: "Rully Anwar Hakim", nim: "20210801105", nilai: "79.00", pelanggaran: "00" },
+            { nama: "Dina Maria Ulfa", nim: "20210801110", nilai: "91.10", pelanggaran: "00" },
+            { nama: "Taufik Hidayatullah", nim: "20210801115", nilai: "84.30", pelanggaran: "02" }
+        ]
+
+        const tableBody = document.getElementById('mhs-table-body')
+        const paginationControls = document.getElementById('pagination-controls')
+        const filterDropdown = document.querySelector('.dropdown-filter')
+
+        function renderTable(data) {
+            tableBody.innerHTML = ""
+            const start = (currentPage - 1) * rowsPerPage
+            const end = start + rowsPerPage
+            const paginatedData = data.slice(start, end)
+
+            tableBody.innerHTML = paginatedData.map(m => `
+        <tr>
+            <td>${m.nama}</td>
+            <td class="text-muted">${m.nim}</td>
+            <td class="text-center"><strong>${m.nilai}</strong></td>
+            <td class="text-center">${m.pelanggaran}</td>
+            <td class="text-center">
+                <button onclick="location.href='detailmhs.html'" class="action-btn" title="Lihat Detail">
+                    <svg class="icon-svg" viewBox="0 0 24 24">
+                        <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                    </svg>
+                </button>
+            </td>
+        </tr>
+    `).join('')
+        }
+
+        function setupPagination(data) {
+            paginationControls.innerHTML = ""
+            const pageCount = Math.ceil(data.length / rowsPerPage)
+            if (pageCount <= 1) return
+
+            const prevBtn = document.createElement('a')
+            prevBtn.innerHTML = `<svg class="icon-svg" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" /></svg> Sebelumnya`
+            prevBtn.className = "page-nav"
+            prevBtn.href = "#"
+            prevBtn.onclick = (e) => {
+                e.preventDefault()
+                if (currentPage > 1) {
+                    currentPage--
+                    updateUI()
+                }
+            }
+            paginationControls.appendChild(prevBtn)
+
+            const pageNumbers = document.createElement('div')
+            pageNumbers.className = "page-numbers"
+
+            for (let i = 1; i <= pageCount; i++) {
+                const btn = document.createElement('span')
+                btn.innerText = i
+                btn.className = i === currentPage ? "page-num active" : "page-num"
+                btn.onclick = () => {
+                    currentPage = i
+                    updateUI()
+                }
+                pageNumbers.appendChild(btn)
+            }
+            paginationControls.appendChild(pageNumbers)
+
+            const nextBtn = document.createElement('a')
+            nextBtn.innerHTML = `Selanjutnya <svg class="icon-svg" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /></svg>`
+            nextBtn.className = "page-nav"
+            nextBtn.href = "#"
+            nextBtn.onclick = (e) => {
+                e.preventDefault()
+                if (currentPage < pageCount) {
+                    currentPage++
+                    updateUI()
+                }
+            }
+            paginationControls.appendChild(nextBtn)
+        }
+
+        function updateUI() {
+            const selectedAngkatan = filterDropdown.value
+            const filteredData = selectedAngkatan
+                ? mahasiswa.filter(m => m.nim.startsWith(selectedAngkatan))
+                : mahasiswa
+
+            renderTable(filteredData)
+            setupPagination(filteredData)
+        }
+
+        filterDropdown.addEventListener('change', () => {
+            currentPage = 1
+            updateUI()
+        })
+
+        updateUI()
+    </script>
+</body>
+
+</html>

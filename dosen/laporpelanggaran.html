@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapor Pelanggaran - Panel Dosen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-box">
+            <h2>Dosen</h2>
+            <p>Universitas Surya Cemerlang</p>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="location.href='index.html'">Dashboard</li>
+            <li onclick="location.href='daftarmhsbimbingan.html'">Pemantauan Nilai</li>
+            <li class="active">Lapor Pelanggaran</li>
+            <li>Keluar</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <a href="index.html" class="back-link">
+            <svg class="icon-svg" viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+            Kembali
+        </a>
+
+        <div class="form-container">
+            <h1 class="form-title">LAPOR PELANGGARAN MAHASISWA</h1>
+
+            <form id="laporForm" novalidate>
+                <div class="input-group">
+                    <label>Nama Mahasiswa</label>
+                    <input type="text" id="nama" placeholder="Masukkan Nama Mahasiswa Terlapor">
+                </div>
+
+                <div class="input-group">
+                    <label>NIM Mahasiswa</label>
+                    <input type="text" id="nim" placeholder="Masukkan NIM Mahasiswa Terlapor">
+                </div>
+
+                <div class="input-group">
+                    <label>Kategori Pelanggaran</label>
+                    <select id="kategori" onchange="updatePelanggaran()">
+                        <option value="" disabled selected>Pilih Kategori Pelanggaran</option>
+                        <option value="Kedisiplinan">Kedisiplinan</option>
+                        <option value="Akademik">Akademik</option>
+                        <option value="Etika">Etika</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Pelanggaran</label>
+                    <select id="pelanggaran" onchange="setJenis()">
+                        <option value="" disabled selected>Pilih Pelanggaran</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Jenis Pelanggaran</label>
+                    <input type="text" id="jenis" placeholder="Jenis Pelanggarannya" readonly class="readonly-input">
+                </div>
+
+                <div class="upload-section">
+                    <label>Unggah Bukti</label>
+                    <div class="bukti-wrapper">
+                        <div class="drop-zone" id="dropZone">
+                            <svg class="icon-svg" viewBox="0 0 24 24">
+                                <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z" />
+                            </svg>
+                            <p id="file-text">Klik untuk upload/drag and drop</p>
+                            <input type="file" id="fileInput" hidden>
+                        </div>
+                        <input type="text" id="linkBukti" placeholder="Salin Link Bukti" class="link-input">
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn-lapor">Laporkan</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div id="toast"></div>
+
+    <script>
+        const dataPelanggaran = {
+            "Kedisiplinan": [
+                { nama: "Terlambat", jenis: "Ringan" },
+                { nama: "Bolos Kuliah", jenis: "Sedang" },
+                { nama: "Tidak Mengikuti Upacara", jenis: "Ringan" }
+            ],
+            "Akademik": [
+                { nama: "Menyontek", jenis: "Berat" },
+                { nama: "Plagiat Dasar", jenis: "Sedang" },
+                { nama: "Pemalsuan Tanda Tangan", jenis: "Berat" }
+            ],
+            "Etika": [
+                { nama: "Berpakaian Tidak Sopan", jenis: "Ringan" },
+                { nama: "Tindakan Kasar", jenis: "Berat" },
+                { nama: "Merusak Fasilitas", jenis: "Sedang" }
+            ]
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast")
+            toast.innerText = message
+            toast.className = "show"
+            if (isError) toast.classList.add("error")
+            setTimeout(() => { toast.classList.remove("show") }, 3000)
+        }
+
+        function updatePelanggaran() {
+            const kat = document.getElementById('kategori').value
+            const pelSelect = document.getElementById('pelanggaran')
+            pelSelect.innerHTML = '<option value="" disabled selected>Pilih Pelanggaran</option>'
+
+            if (dataPelanggaran[kat]) {
+                dataPelanggaran[kat].forEach(p => {
+                    let opt = document.createElement('option')
+                    opt.value = p.nama
+                    opt.text = p.nama
+                    pelSelect.add(opt)
+                })
+            }
+            document.getElementById('jenis').value = ""
+        }
+
+        function setJenis() {
+            const kat = document.getElementById('kategori').value
+            const pelValue = document.getElementById('pelanggaran').value
+            const item = dataPelanggaran[kat].find(p => p.nama === pelValue)
+            if (item) {
+                document.getElementById('jenis').value = item.jenis
+            }
+        }
+
+        document.getElementById('laporForm').onsubmit = function (e) {
+            e.preventDefault()
+
+            const nama = document.getElementById('nama').value.trim()
+            const nim = document.getElementById('nim').value.trim()
+            const kategori = document.getElementById('kategori').value
+            const pelanggaran = document.getElementById('pelanggaran').value
+            const file = document.getElementById('fileInput').files.length
+            const link = document.getElementById('linkBukti').value.trim()
+
+            if (!nama || !nim || !kategori || !pelanggaran) {
+                showToast("Kamu harus mengisi semua kolom identitas dan kategori.", true)
+                return
+            }
+
+            const nimPattern = /^\d{11}$/
+            if (!nimPattern.test(nim)) {
+                showToast("NIM kamu harus berupa angka dan berjumlah 11 digit.", true)
+                return
+            }
+
+            if (file === 0 && link === "") {
+                showToast("Kamu wajib mengunggah berkas atau mengisi link bukti.", true)
+                return
+            }
+
+            showToast("Kamu berhasil mengirim laporan pelanggaran.")
+            this.reset()
+            document.getElementById('file-text').innerText = "Klik untuk upload/drag and drop"
+            document.getElementById('jenis').value = ""
+        }
+
+        const dz = document.getElementById('dropZone')
+        const fi = document.getElementById('fileInput')
+        dz.onclick = () => fi.click()
+        fi.onchange = () => {
+            if (fi.files.length > 0) {
+                document.getElementById('file-text').innerText = fi.files[0].name
+            }
+        }
+    </script>
+</body>
+
+</html>

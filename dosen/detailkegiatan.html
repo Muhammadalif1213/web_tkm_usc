@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Validasi - Panel Dosen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="profile-box">
+            <h2>Dosen</h2>
+            <p>Universitas Surya Cemerlang</p>
+        </div>
+        <ul class="nav-menu">
+            <li class="active" onclick="location.href='index.html'">Dashboard</li>
+            <li onclick="location.href='daftarmhsbimbingan.html'">Pemantauan Nilai</li>
+            <li onclick="location.href='laporpelanggaran.html'">Lapor Pelanggaran</li>
+            <li>Keluar</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <a href="index.html" class="back-link">
+            <svg class="icon-svg" viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+            Kembali
+        </a>
+
+        <h1 class="page-title">Validasi Kegiatan Mahasiswa</h1>
+        <p class="date-submission">Tanggal pengajuan : 27-12-2025</p>
+
+        <section class="card">
+            <div class="card-header">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+                Biodata Mahasiswa
+            </div>
+            <div class="card-body">
+                <div class="info-row">
+                    <div class="info-label">Nama Mahasiswa</div>
+                    <div>: Ahmad Fauzi Pratama</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">NIM Mahasiswa</div>
+                    <div>: 20210801045</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path
+                        d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z" />
+                </svg>
+                Informasi Kegiatan
+            </div>
+            <div class="card-body">
+                <div class="tabs">
+                    <span class="tab-item active" onclick="switchTab(event, 'detail')">Detail</span>
+                    <span class="tab-item" onclick="switchTab(event, 'bukti')">Bukti</span>
+                </div>
+
+                <div id="detail" class="tab-content active">
+                    <div class="info-row">
+                        <div class="info-label">Nama Kegiatan</div>
+                        <div>: KKN Tematik</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Lokasi</div>
+                        <div>: Desa Sukamaju, Jawa Barat</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Durasi</div>
+                        <div>: 40 Hari</div>
+                    </div>
+                </div>
+
+                <div id="bukti" class="tab-content">
+                    <table class="bukti-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">No</th>
+                                <th>Berkas</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Dokumen</th>
+                                <th>Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td>Sertifikat KKN</td>
+                                <td class="text-center"><span class="status-wajib">Wajib</span></td>
+                                <td class="text-center">
+                                    <button class="action-btn" title="Lihat Dokumen">
+                                        <svg class="icon-svg" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td>Sertifikat KKN Fauzi</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">2</td>
+                                <td>Laporan KKN</td>
+                                <td class="text-center"><span class="status-wajib">Wajib</span></td>
+                                <td class="text-center">
+                                    <button class="action-btn" title="Lihat Dokumen">
+                                        <svg class="icon-svg" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                                        </svg>
+                                    </button>
+                                </td>
+                                <td>Laporan KKN Kelompok 142</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <footer class="action-footer">
+            <button class="btn btn-tolak" onclick="toggleModal(true)">Tolak</button>
+            <button class="btn btn-validasi" onclick="triggerValidation()">Validasi</button>
+        </footer>
+    </main>
+
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-title">
+                <svg class="icon-svg" viewBox="0 0 24 24">
+                    <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                </svg>
+                Alasan Penolakan
+            </div>
+            <div class="modal-content-area">
+                <textarea id="reject-reason" class="reason-input"
+                    placeholder="Tulis alasan penolakan di sini..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-tolak" style="padding: 8px 35px;" onclick="toggleModal(false)">Batal</button>
+                <button class="btn btn-validasi" style="padding: 8px 35px;" onclick="submitRejection()">Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        function switchTab(evt, tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('modal-overlay');
+            modal.style.display = show ? 'flex' : 'none';
+            if (!show) document.getElementById('reject-reason').value = '';
+        }
+
+        function submitRejection() {
+            const reason = document.getElementById('reject-reason').value.trim();
+            if (!reason) {
+                showToast("Alasan penolakan wajib untuk diisi!", true);
+                return;
+            }
+            toggleModal(false);
+            showToast("Kegiatan ditolak, alasan telah terkirim.", true);
+            setTimeout(() => { window.location.href = "index.html"; }, 2000);
+        }
+
+        function triggerValidation() {
+            showToast("Kegiatan tervalidasi, Nilai berhasil ditambahkan.", false);
+            setTimeout(() => { window.location.href = "index.html"; }, 2000);
+        }
+
+        function showToast(message, isError) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.className = isError ? "show error" : "show";
+            setTimeout(() => { toast.classList.remove("show"); }, 2000);
+        }
+    </script>
+</body>
+
+</html>

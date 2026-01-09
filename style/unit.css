@@ -308,7 +308,25 @@
   padding: 40px;
   text-align: center;
   background: #eee;
+  transition: all 0.2s ease;
+  cursor: pointer; /* Ubah kursor jadi pointer agar terlihat bisa diklik/interaksi */
+  position: relative;
 }
+/* Efek saat file diseret di atasnya */
+.csv-upload-box.dragover {
+  background-color: #dbeafe; /* Biru muda */
+  border-color: #2563eb; /* Biru border */
+  transform: scale(1.02); /* Sedikit membesar */
+}
+
+/* Memastikan elemen di dalamnya tidak mengganggu event drag */
+.csv-upload-box * {
+  pointer-events: none; /* Penting: agar event drop tidak nyangkut di icon/text */
+}
+.csv-upload-box button {
+  pointer-events: auto; /* Kecuali tombol pilih file */
+}
+
 .csv-icon {
   font-size: 32px;
   margin-bottom: 10px;

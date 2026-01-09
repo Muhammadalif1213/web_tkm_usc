@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Pelanggaran Mahasiswa</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="profile-box">
+            <h2>Dosen</h2>
+            <p>Universitas Surya Cemerlang</p>
+        </div>
+        <ul class="nav-menu">
+            <li onclick="location.href='index.html'">Dashboard</li>
+            <li class="active" onclick="location.href='daftarmhsbimbingan.html'">Pemantauan Nilai</li>
+            <li onclick="location.href='laporpelanggaran.html'">Lapor Pelanggaran</li>
+            <li>Keluar</li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <a href="detailmhs.html" class="back-link">
+            <svg class="icon-svg" viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+            Kembali
+        </a>
+
+        <h1 class="page-title">Detail Mahasiswa Bimbingan</h1>
+
+        <section class="card profile-card">
+            <div class="photo-placeholder"></div>
+            <div class="profile-details">
+                <h3>Nama Mahasiswa</h3>
+                <p>NIM : 00000000000</p>
+                <p>Angkatan : 0000</p>
+                <br>
+                <p class="text-muted">Dosen Pembimbing:</p>
+                <p><strong>Nama Dosen</strong></p>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">Daftar Pelanggaran</div>
+            <div class="card-body scrollable-table">
+                <table class="bukti-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>Keterangan</th>
+                            <th>Kategori Pelanggaran</th>
+                            <th class="text-center">Bukti Pelanggaran</th>
+                            <th class="text-center">Sanksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pelanggaran-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="summary-grid">
+            <div class="card">
+                <div class="card-header text-center">Poin TKM</div>
+                <div class="card-body">
+                    <p>Terkumpul <span class="float-right status-wajib">00 / 100</span></p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%;"></div>
+                    </div>
+                    <div class="info-row mt-10">
+                        <div class="info-label">Target Minimal</div>
+                        <div>100</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Kegiatan Wajib</div>
+                        <div style="cursor: pointer;" onclick="location.href='kegiatanwjbbelum.html'">0/0 ></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header text-center">Pelanggaran</div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <div class="info-label">Jumlah pelanggaran</div>
+                        <div>0 Kasus</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Total Poin Pengurangan</div>
+                        <div class="status-wajib">-00 Poin</div>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <script>
+        const dataPelanggaran = [
+            { id: 1, ket: "Lorem Ipsum", kat: "Lorem Ipsum", sanksi: "00" },
+            { id: 2, ket: "Lorem Ipsum", kat: "Lorem Ipsum", sanksi: "00" },
+            { id: 3, ket: "Lorem Ipsum", kat: "Lorem Ipsum", sanksi: "00" },
+            { id: 4, ket: "Lorem Ipsum", kat: "Lorem Ipsum", sanksi: "00" },
+        ];
+
+        const tableBody = document.getElementById('pelanggaran-table-body');
+
+        tableBody.innerHTML = dataPelanggaran.map(p => `
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.ket}</td>
+                <td>${p.kat}</td>
+                <td class="text-center">
+                    <button class="action-btn" title="Lihat Bukti">
+                        <svg class="icon-svg" viewBox="0 0 24 24">
+                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                        </svg>
+                    </button>
+                </td>
+                <td class="text-center">${p.sanksi}</td>
+            </tr>
+        `).join('');
+    </script>
+</body>
+
+</html>

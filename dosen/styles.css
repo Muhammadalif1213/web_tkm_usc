@@ -1,0 +1,630 @@
+/* --- KONFIGURASI WARNA & VARIABEL --- */
+:root {
+    --primary-blue: #0d3b66;
+    --accent-gold: #f9bc60;
+    --bg-light: #f4f7f6;
+    --card-gray: #ebebeb;
+    --header-gray: #d4d4d4;
+    --text-dark: #333;
+    --text-muted: #6c757d;
+    --danger-red: #e63946;
+    --success-green: #2ecc71;
+    --sidebar-width: 270px;
+    --white: #ffffff;
+}
+
+/* --- RESET & DASAR --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--primary-blue);
+    color: var(--white);
+    height: 100vh;
+    padding: 30px 20px;
+    position: fixed;
+    z-index: 100;
+}
+
+.profile-box {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.profile-box h2 { font-size: 1.2rem; margin: 0; }
+.profile-box p { font-size: 0.8rem; margin-top: 5px; color: #abd1c6; }
+
+.nav-menu { list-style: none; }
+.nav-menu li {
+    padding: 14px 15px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: 0.3s;
+    font-weight: 500;
+    color: var(--white);
+}
+
+.nav-menu li:hover { background-color: rgba(255, 255, 255, 0.1); }
+.nav-menu li.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--accent-gold);
+    font-weight: 700;
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 40px 50px;
+}
+
+.back-link {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 8px;
+}
+
+.page-title {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.2rem;
+    color: var(--primary-blue);
+    margin-bottom: 30px;
+}
+
+/* --- SISTEM TABEL --- */
+.table-container {
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Memberikan jarak antar baris */
+}
+
+th {
+    background-color: transparent;
+    text-align: left;
+    padding: 12px 20px;
+    color: var(--primary-blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+td {
+    padding: 16px 20px;
+    background-color: var(--header-gray); /* Warna abu-abu baris */
+    border: none;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+/* Penyelarasan Judul dan Isi Kolom */
+.text-center {
+    text-align: center;
+}
+
+/* Membuat sudut melengkung pada baris */
+td:first-child { border-radius: 8px 0 0 8px; }
+td:last-child { border-radius: 0 8px 8px 0; }
+
+/* --- TOMBOL AKSI BERSIH --- */
+.action-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--primary-blue);
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.action-btn:hover {
+    transform: scale(1.2);
+    color: #000;
+}
+
+/* --- STATUS & TEKS --- */
+.status-wajib { color: var(--danger-red); font-weight: bold; }
+.status-pilihan { color: #457b9d; font-weight: bold; }
+
+/* --- PAGINATION BAR --- */
+.pagination-bar {
+    background-color: var(--header-gray);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.page-nav {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+
+.page-numbers { display: flex; gap: 10px; }
+.page-num {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background: var(--white);
+    border: 1px solid #ccc;
+}
+
+.page-num.active {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+}
+
+/* CARD SYSTEM */
+.card {
+    background: var(--card-gray);
+    border-radius: 12px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    background: var(--header-gray);
+    padding: 15px 25px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.1rem;
+}
+
+.card-body { padding: 25px; }
+
+.info-row {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.info-label {
+    width: 200px;
+    font-weight: 600;
+}
+
+/* TABS SYSTEM */
+.tabs {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.tab-item {
+    display: inline-block;
+    padding: 8px 25px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text-muted);
+    transition: 0.2s;
+}
+
+.tab-item.active {
+    color: #000;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* TABLE BUKTI */
+.bukti-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+}
+
+.bukti-table th {
+    text-align: left;
+    padding: 12px 15px;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.bukti-table td {
+    padding: 15px;
+    background-color: var(--white);
+    border-bottom: 1px solid #eee;
+}
+
+.text-center { text-align: center; }
+
+/* BUTTONS */
+.action-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 45px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.btn-tolak {
+    background: var(--white);
+    border: 1px solid #000;
+    color: #000;
+}
+
+.btn-validasi {
+    background: black;
+    color: var(--white);
+}
+
+.btn:hover { opacity: 0.8; }
+
+/* --- MODAL POP UP --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box {
+    background: var(--header-gray);
+    width: 550px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-title {
+    padding: 20px 25px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+}
+
+.modal-content-area {
+    background: var(--card-gray);
+    padding: 25px;
+}
+
+.reason-input {
+    width: 100%;
+    height: 120px;
+    border: none;
+    border-bottom: 2px solid #999;
+    background: transparent;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    line-height: 2;
+}
+
+.modal-footer {
+    background: var(--card-gray);
+    padding: 15px 25px 25px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+/* --- TOAST NOTIFICATION --- */
+#toast {
+    visibility: hidden;
+    min-width: 350px;
+    background-color: var(--success-green);
+    color: var(--white);
+    text-align: center;
+    border-radius: 50px;
+    padding: 16px;
+    position: fixed;
+    z-index: 2000;
+    left: 50%;
+    top: 30px;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+#toast.show { visibility: visible; opacity: 1; top: 50px; }
+#toast.error { background-color: var(--danger-red); }
+
+/* --- IKON SVG --- */
+.icon-svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+    vertical-align: middle;
+}
+
+.date-submission {
+    text-align: center;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+.tab-item {
+    display: inline-block;
+    padding: 8px 25px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text-muted);
+    transition: 0.2s;
+}
+
+.tab-item.active {
+    color: #000;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.bukti-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Memberikan jarak antar baris */
+    margin-top: 10px;
+}
+
+.bukti-table th {
+    padding: 12px 20px;
+    color: var(--primary-blue);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    text-align: left; /* Rata kiri untuk judul teks */
+}
+
+.bukti-table td {
+    padding: 16px 20px;
+    background-color: var(--white); /* Latar belakang putih agar kontras dengan card-gray */
+    border: none;
+    font-size: 0.95rem;
+    vertical-align: middle; /* Sejajar tengah secara vertikal */
+    color: var(--text-dark);
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.action-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 45px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.btn-tolak {
+    background: var(--white);
+    border: 1px solid #000;
+    color: #000;
+}
+
+.btn-validasi {
+    background: black;
+    color: var(--white);
+}
+
+.profile-card {
+    display: flex;
+    padding: 25px;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.photo-placeholder {
+    width: 150px;
+    height: 180px;
+    background-color: #000;
+    border-radius: 8px;
+}
+
+.profile-details h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+}
+
+.activity-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.activity-table th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.activity-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.progress-bar {
+    width: 75%;
+    height: 12px;
+    background-color: #eee;
+    border-radius: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #333;
+}
+
+.float-right { float: right; }
+.mt-10 { margin-top: 10px; }
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--primary-blue);
+}
+
+.dropdown-filter {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.form-container {
+            background-color: #d4d4d4;
+            border-radius: 25px;
+            padding: 40px;
+            margin-top: 20px;
+        }
+        .form-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #000;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #fff;
+        }
+        .readonly-input { background-color: #f0f0f0; }
+        .bukti-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+        }
+        .drop-zone {
+            flex: 1;
+            border: 2px dashed #888;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #e0e0e0;
+        }
+        .link-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #fff;
+        }
+        .form-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+        .btn-lapor {
+            background-color: #000;
+            color: #fff;
+            padding: 15px 60px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
