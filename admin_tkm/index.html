@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin TKM - Dashboard Modern</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9fafb] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="flex items-center gap-3 px-2">
+            <div>
+                <h1 class="font-bold text-white text-lg tracking-tight">Admin TKM</h1>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="index.html" class="flex items-center p-3 rounded-lg sidebar-active transition hover:text-white">
+                Dashboard
+            </a>
+            <a href="/admin_tkm/DT01/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Manajemen Kategori &<br>Kegiatan
+            </a>
+            <a href="/admin_tkm/DT02/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Kelola Pelanggaran
+            </a>
+            <a href="/admin_tkm/DT03/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Validasi Laporan
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-50">
+            <div class="relative inline-block text-left">
+                <button id="userMenuBtn"
+                    class="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-all outline-none focus:ring-2 focus:ring-blue-100">
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"
+                            id="chevronIcon"></i>
+                    </div>
+                </button>
+
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 overflow-hidden">
+                    <button onclick="handleLogout()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-all border-t border-gray-50">
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-10 overflow-y-auto">
+            <section id="page-dashboard">
+                <div class="mb-10">
+                    <h2 class="text-3xl font-extrabold text-gray-900">Statistik Admin TKM</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <div class="stat-card flex justify-between items-center border-2 border-blue-500 shadow-sm">
+                        <div>
+                            <div id="countKategori" class="text-5xl font-extrabold text-blue-600 mb-2">0</div>
+                            <div class="text-[13px] font-bold text-gray-500 uppercase tracking-tight">Kategori Kegiatan
+                            </div>
+                        </div>
+                        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-file-signature text-blue-600 text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card flex justify-between items-center border-2 border-orange-500 shadow-sm">
+                        <div>
+                            <div id="countPelanggaran" class="text-5xl font-extrabold text-orange-600 mb-2">0</div>
+                            <div class="text-[13px] font-bold text-gray-500 uppercase tracking-tight">Kategori
+                                Pelanggaran</div>
+                        </div>
+                        <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-triangle-exclamation text-orange-600 text-2xl"></i>
+                        </div>
+                    </div>
+
+                    <div class="stat-card flex justify-between items-center border-2 border-emerald-500 shadow-sm">
+                        <div>
+                            <div id="countLaporan" class="text-5xl font-extrabold text-emerald-600 mb-2">0</div>
+                            <div class="text-[13px] font-bold text-gray-500 uppercase tracking-tight">
+                                Validasi Laporan
+                            </div>
+                        </div>
+                        <div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center">
+                            <i class="fa-solid fa-clipboard-check text-emerald-600 text-2xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-8 flex items-center gap-2 text-sm uppercase">Jumlah
+                            Mahasiswa mengklaim Nilai TKM Per Kategori</h3>
+                        <div class="h-64">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                        <h3 class="font-bold text-gray-800 mb-8 flex items-center gap-2 text-sm uppercase">Tren Laporan
+                            Pelanggaran</h3>
+                        <div class="h-64">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // REVISI LOGIC DINAMIS: Ambil Data Kategori & Pelanggaran dari LocalStorage
+        function updateDashboardStats() {
+            // 1. Update Kategori Kegiatan
+            const defaultCategories = ["Organisasi – Anggota", "Organisasi - Pengurus", "Kepanitiaan Internal"]; // ... dst
+            const savedKegiatan = JSON.parse(localStorage.getItem('myCategories')) || defaultCategories;
+            document.getElementById('countKategori').innerText = savedKegiatan.length;
+
+            // 2. Update Kategori Pelanggaran
+            const savedPelanggaran = JSON.parse(localStorage.getItem('dataPelanggaran')) || [];
+            document.getElementById('countPelanggaran').innerText = savedPelanggaran.length;
+
+            // 3. UPDATE DINAMIS: Mengambil jumlah data dari Validasi Laporan (dt03)
+            // Kita mengambil dari localStorage dengan key 'laporanData'
+            const savedLaporan = JSON.parse(localStorage.getItem('laporanData')) || [];
+
+            // Tampilkan total jumlah data ke dalam card
+            const countElement = document.getElementById('countLaporan');
+            if (countElement) {
+                countElement.innerText = savedLaporan.length;
+            }
+        }
+
+        // DROPDOWN LOGIC
+        const menuBtn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        const chevron = document.getElementById('chevronIcon');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = dropdown.classList.toggle('hidden');
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+
+        window.addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+            chevron.style.transform = 'rotate(0deg)';
+        });
+
+        function handleLogout() {
+            if (confirm("Apakah Anda yakin ingin logout?")) {
+                window.location.href = "login.html";
+            }
+        }
+
+        // CHARTS & STATS INITIALIZATION
+        window.onload = function () {
+            updateDashboardStats();
+
+            // Pie Chart
+            const ctxPie = document.getElementById('pieChart').getContext('2d');
+            new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: ['Organisasi - Anggota', 'Kepanitiaan Internal', 'Prestasi Internasional', 'Lainnya'],
+                    datasets: [{
+                        data: [45, 25, 15, 15],
+                        backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#6366f1'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { usePointStyle: true, padding: 20, font: { size: 13, weight: '600' } } }
+                    }
+                }
+            });
+
+            // Bar Chart
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+            new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                    datasets: [{
+                        label: 'Laporan',
+                        data: [12, 19, 13, 25, 22, 30],
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f3f4f6', drawBorder: false } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+
+</html>

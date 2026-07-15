@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Kategori - Admin TKM</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Styling untuk menu yang sedang aktif */
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9fafb] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="flex items-center gap-3 px-2">
+            <div>
+                <h1 class="font-bold text-white text-lg tracking-tight">Admin TKM</h1>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="../index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400 hover:text-white">
+                Dashboard
+            </a>
+            <a href="/admin_tkm/DT01/index.html" class="flex items-center p-3 rounded-lg sidebar-active transition hover:text-white">
+                Manajemen Kategori & Kegiatan
+            </a>
+            <a href="/admin_tkm/DT02/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Kelola Pelanggaran
+            </a>
+            <a href="/admin_tkm/DT03/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400 hover:text-white">
+                Validasi Laporan
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-50">
+            <div class="relative inline-block text-left">
+                <button id="userMenuBtn"
+                    class="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-all outline-none">
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"
+                            id="chevronIcon"></i>
+                    </div>
+                </button>
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50">
+                    <button onclick="handleLogout()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-all">
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-10 overflow-y-auto">
+            <div class="max-w-5xl mx-auto">
+                <h2 class="text-3xl font-bold text-center text-gray-900 mb-8 lowercase">kategori kegiatan</h2>
+                <div class="flex justify-end mb-4">
+                    <button onclick="goToForm()"
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2 transition-all shadow-sm">
+                        <i class="fa-solid fa-plus text-[10px]"></i> Kategori
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-xl border border-black overflow-hidden shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-black bg-gray-50">
+                                <th class="p-4 font-bold border-r border-black w-16 text-center">No</th>
+                                <th class="p-4 font-bold border-r border-black">Nama Kategori</th>
+                                <th class="p-4 font-bold border-r border-black text-center">Jumlah Kegiatan</th>
+                                <th class="p-4 font-bold text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div id="paginationContainer"
+                    class="mt-6 flex justify-center items-center gap-2 text-sm text-gray-600 font-medium"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const defaultCategories = [
+            "Organisasi – Anggota", "Organisasi - Pengurus", "Kepanitiaan Internal",
+            "Kepanitiaan Eksternal", "Prestasi Universitas", "Prestasi Regional",
+            "Prestasi Nasional", "Pelatihan/Workshop Peserta", "Karya Ilmiah & Jurnal",
+            "Keagamaan", "Seminar Internasional", "Beasiswa & Hibah",
+            "Unit Kegiatan Mahasiswa (UKM)", "Bakti Sosial & Relawan", "Sertifikasi Kompetensi",
+            "Magang & Praktik Kerja", "Pertukaran Mahasiswa", "Wirausaha / Startup",
+            "Lomba Inovasi Teknologi", "Kritik & Esai Populer"
+        ];
+
+        let allCategories = JSON.parse(localStorage.getItem('myCategories')) || defaultCategories;
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        // Ganti bagian renderTable di index.html dengan ini
+        function renderTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = "";
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const currentItems = allCategories.slice(start, end);
+
+            // Ambil data kegiatan (semua kategori)
+            const allKegiatan = JSON.parse(localStorage.getItem('all_kegiatan_data')) || {};
+
+            currentItems.forEach((name, index) => {
+                const globalIndex = start + index;
+
+                // Ambil jumlah kegiatan khusus untuk kategori ini
+                // Jika tidak ada data, defaultnya 0
+                let jumlahKegiatan = allKegiatan[name] ? allKegiatan[name].length : 0;
+
+                // Khusus untuk kategori default pertama jika ingin ada data master (opsional)
+                if (name === "Organisasi – Anggota" && !allKegiatan[name]) {
+                    jumlahKegiatan = 20;
+                }
+
+                const row = `
+                <tr class="border-b border-gray-300 hover:bg-gray-50">
+                    <td class="p-4 border-r border-black text-center">${globalIndex + 1}</td>
+                    <td class="p-4 border-r border-black font-medium">${name}</td>
+                    <td class="p-4 border-r border-black text-center">
+                        <span class="bg-blue-50 px-3 py-1 rounded-full text-xs font-bold text-blue-600 border border-blue-100">
+                            ${jumlahKegiatan}
+                        </span>
+                    </td>
+                    <td class="p-4 flex justify-center gap-4 text-xl">
+                        <button onclick="goToList('${name}')" title="List" class="hover:text-blue-600 transition-colors">
+                            <i class="fa-solid fa-list-ul"></i>
+                        </button>
+                        <button onclick="editData(${globalIndex})" title="Edit" class="hover:text-yellow-600 transition-colors">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button onclick="deleteData(${globalIndex})" title="Delete" class="hover:text-red-600 transition-colors">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+            renderPaginationControls();
+        }
+
+        function goToList(categoryName) {
+            sessionStorage.setItem('currentCategoryName', categoryName);
+            window.location.href = 'list_kegiatan.html';
+        }
+
+        function goToForm() {
+            sessionStorage.removeItem('editIndex');
+            window.location.href = 'form_kategori.html';
+        }
+
+        function editData(index) {
+            sessionStorage.setItem('editIndex', index);
+            window.location.href = 'form_kategori.html';
+        }
+
+        function deleteData(index) {
+            if (confirm('Hapus kategori ini beserta seluruh datanya?')) {
+                const categoryName = allCategories[index];
+
+                // Hapus dari daftar kategori
+                allCategories.splice(index, 1);
+                localStorage.setItem('myCategories', JSON.stringify(allCategories));
+
+                // Hapus data kegiatan di dalam kategori tersebut
+                let allKegiatan = JSON.parse(localStorage.getItem('all_kegiatan_data')) || {};
+                delete allKegiatan[categoryName];
+                localStorage.setItem('all_kegiatan_data', JSON.stringify(allKegiatan));
+
+                renderTable();
+            }
+        }
+
+        function renderPaginationControls() {
+            const container = document.getElementById('paginationContainer');
+            container.innerHTML = "";
+            const totalPages = Math.ceil(allCategories.length / rowsPerPage);
+
+            const prevBtn = document.createElement('button');
+            prevBtn.innerText = "Sebelumnya";
+            prevBtn.disabled = currentPage === 1;
+            prevBtn.className = `hover:underline ${currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : 'hover:text-blue-600'}`;
+            prevBtn.onclick = () => { currentPage--; renderTable(); };
+            container.appendChild(prevBtn);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.innerText = i;
+                pageBtn.className = i === currentPage ? "w-8 h-8 flex items-center justify-center bg-gray-300 rounded-md text-gray-900 shadow-inner" : "w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-md transition";
+                pageBtn.onclick = () => { currentPage = i; renderTable(); };
+                container.appendChild(pageBtn);
+            }
+
+            const nextBtn = document.createElement('button');
+            nextBtn.innerText = "Selanjutnya";
+            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+            nextBtn.className = `hover:underline ${(currentPage === totalPages || totalPages === 0) ? 'text-gray-400 cursor-not-allowed' : 'hover:text-blue-600'}`;
+            nextBtn.onclick = () => { currentPage++; renderTable(); };
+            container.appendChild(nextBtn);
+        }
+
+        const menuBtn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        const chevron = document.getElementById('chevronIcon');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = dropdown.classList.toggle('hidden');
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+
+        window.addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        });
+
+        function handleLogout() {
+            if (confirm("Logout dari sistem?")) window.location.href = "../login.html";
+        }
+
+        renderTable();
+    </script>
+</body>
+
+</html>

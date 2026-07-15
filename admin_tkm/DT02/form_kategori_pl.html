@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Kategori - Admin TKM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 550px;
+        }
+
+        .form-header {
+            background-color: #1e293b;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .form-header h2 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-accent {
+            height: 5px;
+            background-color: #4f46e5;
+            width: 100%;
+        }
+
+        .input-field {
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 18px;
+            width: 100%;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .btn-save-gradient {
+            background: linear-gradient(90deg, #6366f1 0%, #a855f7 100%);
+            color: white;
+            font-weight: 800;
+            padding: 16px;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-save-gradient:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        #userDropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 150px;
+            margin-top: 10px;
+            border: 1px solid #e2e8f0;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f3f4f6] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="flex items-center gap-3 px-2">
+            <div>
+                <h1 class="font-bold text-white text-lg tracking-tight">Admin TKM</h1>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+            </div>
+        </div>
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="../index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">Dashboard</a>
+            <a href="../dt01/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">Manajemen Kategori
+                &<br>Kegiatan</a>
+            <a href="index.html" class="flex items-center p-3 rounded-lg sidebar-active transition">Kelola
+                Pelanggaran</a>
+            <a href="../dt03/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Validasi Laporan
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-50">
+            <div class="relative">
+                <div id="userBtn"
+                    class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-all">
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                    </div>
+                    <div
+                        class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                        <i class="fa-solid fa-user text-gray-400"></i>
+                    </div>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+                </div>
+                <div id="userDropdown">
+                    <button onclick="handleLogout()"
+                        class="w-full text-left px-4 py-3 text-sm text-red-600 font-bold hover:bg-red-50 rounded-lg flex items-center gap-2 transition-colors">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-10 flex flex-col items-center justify-center">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 id="formTitle">Tambah Kategori</h2>
+                </div>
+                <div class="header-accent"></div>
+
+                <div class="p-10">
+                    <div class="mb-8">
+                        <label class="block text-sm font-extrabold text-gray-700 mb-3 tracking-wide">Nama
+                            Kategori</label>
+                        <input type="text" id="namaKategori" required autocomplete="off"
+                            placeholder="-- Contoh : Etika & Perilaku --" class="input-field text-gray-600 italic">
+
+                        <p id="errorMessage" class="hidden text-red-500 text-xs mt-2 ml-1 font-semibold italic">
+                            <i class="fa-solid fa-circle-exclamation mr-1"></i> Nama kategori sudah ada dalam daftar!
+                        </p>
+                    </div>
+                    <button onclick="saveKategori()" class="btn-save-gradient">SAVE</button>
+                </div>
+            </div>
+
+            <div class="mt-8 w-full max-w-[550px]">
+                <button onclick="goBack()"
+                    class="flex items-center gap-2 text-gray-600 font-bold hover:text-gray-900 transition-colors italic text-sm">
+                    <i class="fa-solid fa-circle-chevron-left text-lg"></i> Kembali
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const namaInput = document.getElementById('namaKategori');
+        const formTitle = document.getElementById('formTitle');
+        const errorMsg = document.getElementById('errorMessage');
+        const editIndex = localStorage.getItem('editIndex');
+        let dataKategori = JSON.parse(localStorage.getItem('dataPelanggaran')) || [];
+
+        window.onload = () => {
+            if (editIndex !== null) {
+                formTitle.innerText = "Edit Kategori";
+                namaInput.value = dataKategori[editIndex].nama;
+            }
+        };
+
+        function saveKategori() {
+            const namaBaru = namaInput.value.trim();
+
+            // Sembunyikan error setiap kali tombol ditekan
+            errorMsg.classList.add('hidden');
+            namaInput.classList.remove('border-red-400');
+
+            if (!namaBaru) {
+                alert("Harap isi nama kategori!");
+                return;
+            }
+
+            // Validasi Duplikasi
+            const isDuplicate = dataKategori.some((item, index) => {
+                if (editIndex !== null && index == editIndex) return false;
+                return item.nama.toLowerCase() === namaBaru.toLowerCase();
+            });
+
+            if (isDuplicate) {
+                errorMsg.classList.remove('hidden');
+                namaInput.classList.add('border-red-400');
+                namaInput.focus();
+                return;
+            }
+
+            // --- LOGIKA UPDATE DATA ---
+            if (editIndex !== null) {
+                const namaLama = dataKategori[editIndex].nama;
+
+                // Jika nama berubah, pindahkan isi datanya agar tidak hilang
+                if (namaLama !== namaBaru) {
+                    let masterDetail = JSON.parse(localStorage.getItem('masterDetailPelanggaran')) || {};
+
+                    // Jika ada data di bawah kategori lama, pindahkan ke key kategori baru
+                    if (masterDetail[namaLama]) {
+                        masterDetail[namaBaru] = masterDetail[namaLama]; // Salin data ke nama baru
+                        delete masterDetail[namaLama]; // Hapus data di nama lama
+                        localStorage.setItem('masterDetailPelanggaran', JSON.stringify(masterDetail));
+                    }
+                }
+
+                dataKategori[editIndex].nama = namaBaru;
+                localStorage.removeItem('editIndex');
+            } else {
+                // Tambah Baru
+                dataKategori.push({ nama: namaBaru });
+            }
+
+            localStorage.setItem('dataPelanggaran', JSON.stringify(dataKategori));
+            alert("Berhasil disimpan!");
+            window.location.href = "index.html";
+        }
+
+        // Event listener untuk menghilangkan error saat user mulai mengetik ulang
+        namaInput.addEventListener('input', () => {
+            errorMsg.classList.add('hidden');
+            namaInput.classList.remove('border-red-400');
+        });
+
+        function goBack() {
+            localStorage.removeItem('editIndex');
+            window.location.href = "index.html";
+        }
+
+        const userBtn = document.getElementById('userBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        userBtn.onclick = (e) => {
+            e.stopPropagation();
+            userDropdown.style.display = userDropdown.style.display === 'block' ? 'none' : 'block';
+        };
+        window.onclick = () => userDropdown.style.display = 'none';
+
+        function handleLogout() {
+            if (confirm("Apakah Anda yakin ingin keluar?")) window.location.href = "../login.html";
+        }
+    </script>
+</body>
+
+</html>

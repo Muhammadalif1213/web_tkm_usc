@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validasi Laporan - Admin TKM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+
+        /* Gaya Tabel */
+        .table-custom {
+            border-collapse: collapse;
+            min-width: 1450px;
+        }
+
+        .table-custom th {
+            background-color: #cbd5e1;
+            color: #111827;
+            padding: 12px;
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: capitalize;
+            border: 1px solid #94a3b8;
+        }
+
+        .table-custom td {
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        /* Custom Scrollbar */
+        .scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+
+        /* Filter Design */
+        .filter-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #statusFilter {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px;
+        }
+
+        .filter-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 11px;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #4b5563;
+        }
+
+        #evidenceModal {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9fafb] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="px-2">
+            <h1 class="font-bold text-white text-lg">Admin TKM</h1>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+        </div>
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="../index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Dashboard</a>
+            <a href="/admin_tkm/DT01/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Manajemen Kategori
+                &<br>Kegiatan</a>
+            <a href="/admin_tkm/DT02/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Kelola
+                Pelanggaran</a>
+            <a href="/admin_tkm/DT03/index.html" class="flex items-center p-3 rounded-lg sidebar-active transition">Validasi Laporan</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-50">
+            <div class="relative inline-block text-left">
+                <button id="userMenuBtn"
+                    class="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-all outline-none">
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"
+                            id="chevronIcon"></i>
+                    </div>
+                </button>
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50">
+                    <button onclick="handleLogout()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-all">
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-10 overflow-y-auto">
+            <div class="max-w-full mx-auto">
+                <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-8">Validasi Laporan</h2>
+
+                <div class="flex justify-end mb-4">
+                    <div class="filter-wrapper">
+                        <select id="statusFilter"
+                            class="bg-gray-200 px-6 py-2 rounded-full text-sm font-bold outline-none cursor-pointer border-none min-w-[160px]">
+                            <option value="Semua">Status</option>
+                            <option value="Valid">Valid</option>
+                            <option value="Tidak Valid">Tidak Valid</option>
+                            <option value="Belum Tervalidasi">Belum Tervalidasi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="bg-white shadow-sm border border-gray-200 rounded-sm overflow-hidden">
+                    <div class="scroll-container overflow-x-auto">
+                        <table class="w-full text-left table-custom">
+                            <thead>
+                                <tr>
+                                    <th class="w-20 text-center">Action</th>
+                                    <th>Nama Pelapor</th>
+                                    <th>Mahasiswa Terlapor</th>
+                                    <th>NIM Mahasiswa</th>
+                                    <th>Kategori</th>
+                                    <th class="text-center">Jenis Pelanggaran</th>
+                                    <th class="text-center">Bukti</th>
+                                    <th>Tanggal</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="paginationContainer"
+                    class="mt-8 flex justify-center items-center gap-4 text-xs font-bold text-gray-600"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="evidenceModal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full overflow-hidden shadow-2xl relative transform transition-all">
+            <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+                <h3 id="modalTitle" class="font-bold text-gray-700">Bukti Laporan</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-red-600 transition text-2xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 flex flex-col items-center bg-white">
+                <img id="evidenceImage" src="" alt="Bukti Pelanggaran"
+                    class="max-h-[60vh] rounded shadow-sm border border-gray-200 object-contain">
+                <div class="mt-4 w-full text-center">
+                    <p id="evidenceDesc" class="text-sm text-gray-500 italic">Lampiran bukti pelaporan dari dosen
+                        terkait.</p>
+                </div>
+            </div>
+            <div class="p-4 border-t bg-gray-50 flex justify-end">
+                <button onclick="closeModal()"
+                    class="bg-gray-800 text-white px-6 py-2 rounded text-sm font-bold hover:bg-black transition">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Data Dummy Original
+
+
+        // 2. State & Inisialisasi Data
+        // Pastikan inisialisasi dilakukan SEBELUM render apapun
+        let allData = JSON.parse(localStorage.getItem('laporanData'));
+        if (!allData) {
+            allData = dummyData;
+            localStorage.setItem('laporanData', JSON.stringify(allData));
+        }
+
+        let currentFilteredData = [...allData];
+        let currentPage = 1;
+        const rowsPerPage = 10;
+
+        // Elements
+        const tableBody = document.getElementById('tableBody');
+        const paginationContainer = document.getElementById('paginationContainer');
+        const modal = document.getElementById('evidenceModal');
+
+        // 3. Fungsi Render
+        function updateDisplay() {
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const paginatedData = currentFilteredData.slice(startIndex, endIndex);
+
+            renderTable(paginatedData);
+            renderPagination();
+        }
+
+        function renderTable(data) {
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="9" class="text-center py-10 text-gray-500 italic">Tidak ada data ditemukan.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = data.map((item) => {
+                // Logika Warna Status
+                const currentStatus = item.status || "Belum Tervalidasi";
+                let statusClass = "text-gray-400";
+                if (currentStatus === "Valid") statusClass = "text-black";
+                if (currentStatus === "Tidak Valid") statusClass = "text-red-600";
+
+                // --- LOGIKA BARU: Badge berdasarkan tingkat (Ringan, Sedang, Berat) ---
+                let tingkatBadge = "";
+                let teksTingkat = item.tingkat; // Mengambil nilai "Berat", "Sedang", atau "Ringan"
+
+                if (teksTingkat === "Berat") {
+                    tingkatBadge = "bg-red-100 text-red-700 border-red-200";
+                } else if (teksTingkat === "Sedang") {
+                    tingkatBadge = "bg-orange-100 text-orange-700 border-orange-200";
+                } else {
+                    tingkatBadge = "bg-green-100 text-green-700 border-green-200";
+                }
+
+                const originalIndex = allData.findIndex(d =>
+                    d.nim === item.nim && d.tanggal === item.tanggal && d.jenis === item.jenis
+                );
+
+                return `
+            <tr class="hover:bg-blue-50 transition-colors">
+                <td class="text-center">
+                    <a href="detail.html?id=${originalIndex}" class="text-green-600 font-bold hover:underline inline-block">Detail</a>
+                </td>
+                <td class="font-semibold text-gray-700">${item.pelapor}</td>
+                <td class="font-medium">${item.terlapor}</td>
+                <td class="font-mono text-xs font-bold tracking-tight text-gray-600">${item.nim}</td>
+                <td>${item.kategori}</td>
+                
+                <td class="text-center">
+                    <span class="px-4 py-1 rounded-full text-[11px] font-extrabold border uppercase ${tingkatBadge}">
+                        ${teksTingkat}
+                    </span>
+                </td>
+
+                <td class="text-center">
+                    <button onclick="openModal('${item.bukti}', '${item.jenis}')" title="Lihat Bukti">
+                        <i class="fa-solid fa-eye text-gray-800 hover:text-blue-600 transition-colors text-lg"></i>
+                    </button>
+                </td>
+                <td>${item.tanggal}</td>
+                <td class="font-bold ${statusClass}">${currentStatus}</td>
+            </tr>
+        `;
+            }).join('');
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(currentFilteredData.length / rowsPerPage);
+            if (totalPages <= 1 && currentFilteredData.length > 0) {
+                paginationContainer.innerHTML = "";
+                return;
+            }
+
+            let html = `
+                <button onclick="changePage(${currentPage - 1})" class="${currentPage === 1 ? 'opacity-30 cursor-not-allowed' : 'hover:text-black'} transition">Sebelumnya</button>
+                <div class="flex gap-1">
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `
+                    <button onclick="changePage(${i})" class="w-7 h-7 flex items-center justify-center rounded transition ${currentPage === i ? 'bg-gray-300' : 'hover:bg-gray-200'}">${i}</button>
+                `;
+            }
+
+            html += `
+                </div>
+                <button onclick="changePage(${currentPage + 1})" class="${currentPage === totalPages || totalPages === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:text-black'} transition">Selanjutnya</button>
+            `;
+            paginationContainer.innerHTML = html;
+        }
+
+        // 4. Logika Kontrol & Event
+        function changePage(page) {
+            const totalPages = Math.ceil(currentFilteredData.length / rowsPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            updateDisplay();
+        }
+
+        document.getElementById('statusFilter').addEventListener('change', (e) => {
+            const selectedStatus = e.target.value;
+            // Ambil data terbaru sebelum filtering
+            const latestData = JSON.parse(localStorage.getItem('laporanData')) || allData;
+
+            if (selectedStatus === "Semua") {
+                currentFilteredData = [...latestData];
+            } else {
+                currentFilteredData = latestData.filter(item => item.status === selectedStatus);
+            }
+
+            currentPage = 1;
+            updateDisplay();
+        });
+
+        // Modal Logic
+        function openModal(imgSrc, title) {
+            document.getElementById('evidenceImage').src = imgSrc;
+            document.getElementById('modalTitle').innerText = "Bukti: " + title;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        window.onclick = (event) => { if (event.target == modal) closeModal(); };
+
+        // Dropdown User
+        const menuBtn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        const chevron = document.getElementById('chevronIcon');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = dropdown.classList.toggle('hidden');
+            if (chevron) chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+
+        window.addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
+        });
+
+        function handleLogout() {
+            if (confirm("Logout dari sistem?")) window.location.href = "../login.html";
+        }
+
+        // Inisialisasi Tampilan Pertama
+        updateDisplay();
+    </script>
+</body>
+
+</html>

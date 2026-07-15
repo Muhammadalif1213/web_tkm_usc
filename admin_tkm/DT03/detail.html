@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Laporan - Admin TKM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+
+        .tab-active {
+            border-bottom: 2px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 700;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9fafb] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="px-2">
+            <h1 class="font-bold text-white text-lg">Admin TKM</h1>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+        </div>
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="../index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Dashboard</a>
+            <a href="../dt01/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Manajemen Kategori &
+                Kegiatan</a>
+            <a href="../dt02/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Kelola
+                Pelanggaran</a>
+            <a href="index.html" class="flex items-center p-3 rounded-lg sidebar-active transition">Validasi Laporan</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-50">
+            <div class="relative inline-block text-left">
+                <button id="userMenuBtn"
+                    class="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-all outline-none">
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"
+                            id="chevronIcon"></i>
+                    </div>
+                </button>
+
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50">
+                    <button onclick="handleLogout()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-all">
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-8 overflow-y-auto">
+            <div class="max-w-5xl mx-auto">
+
+                <div class="mb-6">
+                    <h2 class="text-3xl font-extrabold text-gray-900">Detail</h2>
+                    <p class="text-sm text-gray-500 mt-1">Tanggal Laporan : <span id="displayTanggal"
+                            class="font-semibold text-gray-700">00-00-0000</span></p>
+                </div>
+
+                <div class="bg-white rounded-xl card-shadow overflow-hidden mb-6 border border-gray-100">
+                    <div class="bg-slate-200 px-6 py-4 border-b flex items-center gap-3">
+                        <i class="fa-solid fa-user-gear text-gray-700"></i>
+                        <h3 class="font-bold text-gray-700">Informasi Laporan</h3>
+                    </div>
+                    <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-bold text-gray-800">--- Terlapor ---</h4>
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-40 text-gray-600">Mahasiswa Terlapor</span>
+                                <span class="font-bold">: <span id="displayTerlapor">Loading...</span></span>
+                            </div>
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-40 text-gray-600">NIM Mahasiswa</span>
+                                <span class="font-bold text-blue-600 font-mono">: <span
+                                        id="displayNIM">0000000000</span></span>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <h4 class="text-sm font-bold text-gray-800">--- Pelapor ---</h4>
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-40 text-gray-600">Nama Pelapor</span>
+                                <span class="font-bold">: <span id="displayPelapor">Loading...</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl card-shadow overflow-hidden border border-gray-100 mb-6">
+                    <div class="bg-slate-200 px-6 py-4 border-b flex items-center gap-3">
+                        <i class="fa-solid fa-book-bookmark text-gray-700"></i>
+                        <h3 class="font-bold text-gray-700">Informasi Pelanggaran</h3>
+                    </div>
+
+                    <div class="bg-white px-6 pt-4 border-b flex gap-8">
+                        <button onclick="switchTab('detail')" id="tabDetail"
+                            class="pb-3 text-sm font-bold tab-active transition-all">Detail</button>
+                        <button onclick="switchTab('bukti')" id="tabBukti"
+                            class="pb-3 text-sm font-bold text-gray-400 hover:text-gray-600 transition-all">Bukti</button>
+                    </div>
+
+                    <div class="p-8">
+                        <div id="contentDetail" class="space-y-4">
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-48 text-gray-600 font-semibold">Kategori Pelanggaran</span>
+                                <span class="font-bold text-gray-800">: <span
+                                        id="displayKategori">Loading...</span></span>
+                            </div>
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-48 text-gray-600 font-semibold">Jenis Pelanggaran</span>
+                                <span class="font-bold text-gray-800">: <span id="displayJenis">Loading...</span></span>
+                            </div>
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-48 text-gray-600 font-semibold">Pengurangan Nilai TKM</span>
+                                <span class="font-bold text-red-600">: <span id="displayPoin">- 0 Poin</span></span>
+                            </div>
+                            <div class="flex gap-2 text-sm">
+                                <span class="w-48 text-gray-600 font-semibold">Status Validasi</span>
+                                <span class="font-bold text-gray-800">: <span
+                                        id="displayStatus">Loading...</span></span>
+                            </div>
+                        </div>
+
+                        <div id="contentBukti" class="hidden">
+                            <table class="w-full border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100">
+                                        <th
+                                            class="border px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase">
+                                            No</th>
+                                        <th
+                                            class="border px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase">
+                                            Berkas</th>
+                                        <th
+                                            class="border px-4 py-3 text-center text-xs font-bold text-gray-600 uppercase">
+                                            Dokumen</th>
+                                        <th
+                                            class="border px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase">
+                                            Tanggal Validasi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="hover:bg-gray-50 transition">
+                                        <td class="border px-4 py-3 text-sm">1</td>
+                                        <td id="displayBerkas" class="border px-4 py-3 text-sm text-gray-700">
+                                            Berkas_Bukti</td>
+                                        <td class="border px-4 py-3 text-center">
+                                            <a id="linkBukti" href="#" target="_blank"
+                                                class="text-gray-900 hover:text-blue-600 text-lg transition">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                        </td>
+                                        <td id="displayTglValidasi"
+                                            class="border px-4 py-3 text-sm text-gray-500 italic">Belum divalidasi</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="actionButtons" class="mt-10 flex justify-end gap-3">
+                            <button onclick="prosesValidasi('Tidak Valid')"
+                                class="px-10 py-2 rounded-lg border border-gray-400 bg-white text-gray-900 font-bold text-sm hover:bg-gray-100 transition-all">Tolak</button>
+                            <button onclick="prosesValidasi('Valid')"
+                                class="px-10 py-2 rounded-lg bg-black text-white font-bold text-sm hover:bg-gray-800 shadow-md transition-all">Validasi</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <a href="index.html"
+                        class="flex items-center gap-2 text-sm font-bold text-gray-900 hover:underline">
+                        <i class="fa-solid fa-circle-chevron-left text-lg"></i> Kembali
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. Ambil INDEX dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataIndex = urlParams.get('id');
+
+        // 2. Ambil data dari LocalStorage
+        // Jika LocalStorage kosong, kita ambil data dari variabel dummyData (pastikan variabel dummyData ada di file ini atau index)
+        let currentData = JSON.parse(localStorage.getItem('laporanData'));
+
+        // 3. PENGAMAN: Jika data di localStorage kosong, arahkan balik ke index untuk inisialisasi
+        if (!currentData) {
+            window.location.href = "index.html";
+        }
+
+        const activeData = currentData[dataIndex];
+
+        function initDisplay() {
+            // Jika dataIndex tidak valid atau data tidak ditemukan di urutan tersebut
+            if (!activeData) {
+                alert("Maaf, data tidak ditemukan di sistem. Silakan kembali ke halaman utama.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            // ... sisa kode initDisplay Anda ke bawah sudah benar ...
+            document.getElementById('displayTanggal').innerText = activeData.tanggal || "-";
+            document.getElementById('displayTerlapor').innerText = activeData.terlapor || activeData.mahasiswa_terlapor || "Data Kosong";
+            document.getElementById('displayNIM').innerText = activeData.nim || activeData.nim_mahasiswa || "00000000";
+            document.getElementById('displayPelapor').innerText = activeData.pelapor || activeData.nama_pelapor || "Anonim";
+            document.getElementById('displayKategori').innerText = activeData.kategori || "-";
+
+            const jenisValue = activeData.tingkat || activeData.jenis || "-";
+            document.getElementById('displayJenis').innerText = jenisValue;
+
+            let poin = "- 10 Poin";
+            if (jenisValue === "Berat") poin = "- 50 Poin";
+            else if (jenisValue === "Sedang") poin = "- 25 Poin";
+            document.getElementById('displayPoin').innerText = poin;
+
+            const status = activeData.status || "Belum Tervalidasi";
+            document.getElementById('displayStatus').innerText = status;
+
+            if (status !== "Belum Tervalidasi") {
+    const actionBtn = document.getElementById('actionButtons');
+    if (actionBtn) actionBtn.classList.add('hidden');
+    
+    // Tampilkan tanggal validasi yang disimpan, jika tidak ada gunakan tanggal laporan
+    document.getElementById('displayTglValidasi').innerText = activeData.tglValidasi || activeData.tanggal;
+    document.getElementById('displayTglValidasi').classList.remove('italic');
+}
+        }
+
+        // Fungsi lainnya tetap sama
+        function switchTab(tab) {
+            const btnDetail = document.getElementById('tabDetail');
+            const btnBukti = document.getElementById('tabBukti');
+            const contentDetail = document.getElementById('contentDetail');
+            const contentBukti = document.getElementById('contentBukti');
+            if (tab === 'detail') {
+                btnDetail.classList.add('tab-active');
+                btnDetail.classList.remove('text-gray-400');
+                btnBukti.classList.remove('tab-active');
+                btnBukti.classList.add('text-gray-400');
+                contentDetail.classList.remove('hidden');
+                contentBukti.classList.add('hidden');
+            } else {
+                btnBukti.classList.add('tab-active');
+                btnBukti.classList.remove('text-gray-400');
+                btnDetail.classList.remove('tab-active');
+                btnDetail.classList.add('text-gray-400');
+                contentBukti.classList.remove('hidden');
+                contentDetail.classList.add('hidden');
+            }
+        }
+
+        function prosesValidasi(hasil) {
+    if (confirm(`Apakah Anda yakin memvalidasi laporan ini sebagai ${hasil}?`)) {
+        // 1. Dapatkan tanggal hari ini secara real-time
+        const sekarang = new Date();
+        const tgl = String(sekarang.getDate()).padStart(2, '0');
+        const bln = String(sekarang.getMonth() + 1).padStart(2, '0'); // Januari adalah 0
+        const thn = sekarang.getFullYear();
+        const tanggalRealTime = `${tgl}-${bln}-${thn}`;
+
+        // 2. Update data di array
+        const idx = currentData.findIndex(item => item === activeData);
+        if (idx !== -1) {
+            currentData[idx].status = hasil;
+            // Simpan tanggal validasi ke properti baru atau timpa properti tanggal jika diinginkan
+            // Di sini kita simpan ke properti 'tglValidasi' agar tidak merusak tanggal laporan asli
+            currentData[idx].tglValidasi = tanggalRealTime; 
+            
+            localStorage.setItem('laporanData', JSON.stringify(currentData));
+            location.reload();
+        }
+    }
+}
+
+        initDisplay();
+
+        // --- Fungsi Logout & Kontrol Dropdown User ---
+        const menuBtn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        const chevron = document.getElementById('chevronIcon');
+
+        if (menuBtn) {
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = dropdown.classList.toggle('hidden');
+                // Animasi rotasi ikon panah
+                if (chevron) {
+                    chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+                }
+            });
+        }
+
+        // Menutup dropdown secara otomatis jika pengguna mengklik di luar menu
+        window.addEventListener('click', () => {
+            if (dropdown && !dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+                if (chevron) chevron.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Fungsi eksekusi logout
+        function handleLogout() {
+            if (confirm("Apakah Anda yakin ingin keluar dari sistem?")) {
+                // Jika Anda menggunakan sistem login, hapus session/localStorage di sini
+                // localStorage.removeItem('isLoggedIn');
+                window.location.href = "../login.html"; // Sesuaikan dengan path file login Anda
+            }
+        }
+    </script>
+</body>
+
+</html>

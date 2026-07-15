@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Pelanggaran - Admin TKM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+
+        .form-container {
+            background-color: #d1d5db;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-header {
+            background-color: #9ca3af;
+            padding: 16px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #111827;
+        }
+
+        .form-body {
+            padding: 40px;
+        }
+
+        .label-custom {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .input-custom {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: none;
+            background-color: #fff;
+            margin-bottom: 24px;
+            outline: none;
+        }
+
+        .btn-simpan {
+            width: 100%;
+            background-color: #000;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-simpan:hover {
+            background-color: #1f2937;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9fafb] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="px-2">
+            <h1 class="font-bold text-white text-lg">Admin TKM</h1>
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+        </div>
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="../index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Dashboard</a>
+            <a href="../dt01/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-400 transition">Manajemen Kategori
+                &<br>Kegiatan</a>
+            <a href="list_pelanggaran.html" class="flex items-center p-3 rounded-lg sidebar-active transition">Kelola
+                Pelanggaran</a>
+            <a href="../dt03/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Validasi Laporan
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-40">
+            <div class="flex items-center gap-3 p-2">
+                <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                    <i class="fa-solid fa-user text-gray-400"></i>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-10 overflow-y-auto">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <button onclick="window.location.href='list_pelanggaran.html'"
+                        class="flex items-center gap-2 text-gray-800 font-bold italic text-sm hover:translate-x-[-4px] transition-transform">
+                        <i class="fa-solid fa-circle-chevron-left text-lg"></i> Kembali
+                    </button>
+                </div>
+
+                <div class="flex justify-center">
+                    <div class="form-container shadow-2xl">
+                        <div id="formTitle" class="form-header uppercase tracking-wider">Form Pelanggaran</div>
+                        <form class="form-body" onsubmit="handleSubmit(event)">
+                            <div class="mb-4">
+                                <label class="label-custom text-sm uppercase">1. Pelanggaran</label>
+                                <input type="text" id="namaPelanggaran" class="input-custom shadow-inner"
+                                    placeholder="-- Contoh : Merokok di kampus --" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="label-custom text-sm uppercase">2. Jenis Pelanggaran</label>
+                                <div class="relative">
+                                    <select id="jenisPelanggaran"
+                                        class="input-custom shadow-inner cursor-pointer appearance-none pr-10" required>
+                                        <option value="" disabled selected>-- Pilih Jenis --</option>
+                                        <option value="Ringan">Ringan</option>
+                                        <option value="Sedang">Sedang</option>
+                                        <option value="Berat">Berat</option>
+                                    </select>
+                                    <div
+                                        class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none mb-6">
+                                        <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <label class="label-custom text-sm uppercase">3. Pengurangan Nilai TKM</label>
+                                <input type="number" id="poinPelanggaran" class="input-custom shadow-inner"
+                                    placeholder="-- Contoh: 10 --" required>
+                            </div>
+
+                            <button type="submit" class="btn-simpan">Simpan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmModal"
+            class="hidden fixed inset-0 z-[100] bg-white/40 backdrop-blur-sm items-center justify-center p-4">
+            <div class="bg-white border border-gray-300 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
+                <div class="bg-gray-500 p-4 flex items-center gap-4">
+                    <i class="fa-solid fa-info text-white text-xl ml-2"></i>
+                    <h3 class="text-black font-bold text-lg">Konfirmasi Simpan Data</h3>
+                </div>
+                <div class="p-8 text-gray-800 text-center sm:text-left">
+                    <p class="mb-4 font-semibold">Apakah data pelanggaran yang Anda masukkan sudah benar dan sesuai?</p>
+                </div>
+                <div class="p-6 flex justify-center gap-6">
+                    <button onclick="closeModal()"
+                        class="px-10 py-2 border-2 border-gray-800 rounded-lg font-bold text-gray-800 hover:bg-gray-100 transition-colors">Batalkan</button>
+                    <button onclick="confirmSave()"
+                        class="px-10 py-2 bg-gray-500 text-black font-bold rounded-lg border-2 border-gray-500 hover:bg-gray-600 transition-colors">Ya,
+                        Sesuai</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const modal = document.getElementById('confirmModal');
+        const editIdx = localStorage.getItem('editPelanggaranIndex');
+        const activeKategori = localStorage.getItem('selectedKategori') || "Umum";
+        let masterDetail = JSON.parse(localStorage.getItem('masterDetailPelanggaran')) || {};
+
+        // ONLOAD: Deteksi Mode Edit
+        window.onload = () => {
+            if (editIdx !== null) {
+                document.getElementById('formTitle').innerText = "Edit Pelanggaran";
+                const dataLama = masterDetail[activeKategori][editIdx];
+
+                if (dataLama) {
+                    document.getElementById('namaPelanggaran').value = dataLama.nama;
+                    document.getElementById('jenisPelanggaran').value = dataLama.jenis;
+                    // Bersihkan teks " Poin" untuk input number
+                    document.getElementById('poinPelanggaran').value = dataLama.poin.replace(/[^0-9]/g, '');
+                }
+            }
+        };
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function confirmSave() {
+            const namaValue = document.getElementById('namaPelanggaran').value.trim(); // Gunakan trim untuk hapus spasi di awal/akhir
+            const jenisValue = document.getElementById('jenisPelanggaran').value;
+            const poinValue = document.getElementById('poinPelanggaran').value;
+
+            // --- LOGIKA CEK DUPLIKAT ---
+            const listPelanggaranKategoriIni = masterDetail[activeKategori] || [];
+
+            // Cari apakah nama sudah ada (case-insensitive / tidak peka huruf besar-kecil)
+            // Jika sedang dalam mode edit, abaikan pengecekan terhadap dirinya sendiri (berdasarkan editIdx)
+            const isDuplicate = listPelanggaranKategoriIni.some((item, index) => {
+                if (editIdx !== null && index == editIdx) return false; // Abaikan jika ini data yang sedang diedit
+                return item.nama.toLowerCase() === namaValue.toLowerCase();
+            });
+
+            if (isDuplicate) {
+                alert("Gagal menyimpan! Nama pelanggaran '" + namaValue + "' sudah ada dalam kategori ini.");
+                closeModal();
+                return; // Hentikan proses simpan
+            }
+            // --- AKHIR LOGIKA CEK DUPLIKAT ---
+
+            const dataInput = {
+                nama: namaValue,
+                jenis: jenisValue,
+                poin: poinValue + " Poin",
+                bukti: "Wajib"
+            };
+
+            if (!masterDetail[activeKategori]) {
+                masterDetail[activeKategori] = [];
+            }
+
+            if (editIdx !== null) {
+                masterDetail[activeKategori][editIdx] = dataInput;
+                localStorage.removeItem('editPelanggaranIndex');
+            } else {
+                masterDetail[activeKategori].push(dataInput);
+            }
+
+            localStorage.setItem('masterDetailPelanggaran', JSON.stringify(masterDetail));
+            window.location.href = 'list_pelanggaran.html';
+        }
+    </script>
+</body>
+
+</html>

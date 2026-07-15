@@ -36,7 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
       } else if (email.includes("dosen")) {
         alert("Login Berhasil sebagai ADMIN DOSEN");
         window.location.href = "dosen/index.html";
-      } else {
+      } else if (email.includes("admintkm")){
+        alert("Login Berhasil sebagai ADMIN TKM");
+        window.location.href = "admin_tkm/index.html";
+      } 
+      else {
         alert("Login Berhasil sebagai MAHASISWA");
         window.location.href = "dashboard-mahasiswa.html";
       }

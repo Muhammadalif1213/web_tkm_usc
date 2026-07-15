@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Kegiatan - Admin TKM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Styling Sidebar Aktif identik dengan Dashboard */
+        .sidebar-active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #3b82f6;
+            color: #3b82f6 !important;
+            font-weight: 700;
+        }
+
+        .detail-card {
+            background-color: #f8fafc;
+            border-radius: 1.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9fafb] flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-72 bg-[#1e293b] text-gray-300 p-6 flex flex-col gap-8 shadow-xl z-20">
+        <div class="flex items-center gap-3 px-2">
+            <div>
+                <h1 class="font-bold text-white text-lg tracking-tight">Admin TKM</h1>
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest">Universitas Surya Cemerlang</p>
+            </div>
+        </div>
+
+        <nav class="flex flex-col gap-2 text-sm">
+            <a href="../index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400 hover:text-white">
+                Dashboard
+            </a>
+
+            <a href="index.html" class="flex items-center p-3 rounded-lg sidebar-active transition">
+                Manajemen Kategori & Kegiatan
+            </a>
+
+            <a href="../dt02/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400">
+                Kelola Pelanggaran
+            </a>
+            <a href="../dt03/index.html"
+                class="flex items-center p-3 rounded-lg hover:bg-gray-800 transition text-gray-400 hover:text-white">
+                Validasi Laporan
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-8 relative z-50">
+            <div class="relative inline-block text-left">
+                <button id="userMenuBtn"
+                    class="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-xl transition-all outline-none">
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-900 leading-none">Bahlil</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
+                            <i class="fa-solid fa-user text-gray-400"></i>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-300"
+                            id="chevronIcon"></i>
+                    </div>
+                </button>
+                <div id="dropdownMenu"
+                    class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50">
+                    <button onclick="handleLogout()"
+                        class="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-all">
+                        <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 p-10 overflow-y-auto bg-[#f1f5f9]/30">
+            <div class="max-w-6xl mx-auto space-y-6">
+                <h2 class="font-bold text-xl text-gray-800 tracking-tight text-center">Detail Kegiatan</h2>
+
+                <div class="detail-card p-8 border border-slate-200 shadow-sm bg-white">
+                    <h3 class="font-bold text-lg mb-6 flex items-center gap-3 text-slate-800 border-b pb-4">
+                        <i class="fa-solid fa-circle-info text-blue-600"></i> Informasi Kegiatan
+                    </h3>
+
+                    <div class="flex flex-col gap-y-4 max-w-3xl">
+                        <p class="flex items-start border-b border-slate-100 pb-3">
+                            <span class="font-semibold w-48 text-slate-500 shrink-0">Nama Kegiatan</span>
+                            <span class="text-slate-800 font-bold" id="detNama">: -</span>
+                        </p>
+
+                        <p class="flex items-start border-b border-slate-100 pb-3">
+                            <span class="font-semibold w-48 text-slate-500 shrink-0">Jenis Kegiatan</span>
+                            <span id="detJenis" class="text-slate-800 font-bold uppercase">: -</span>
+                        </p>
+
+                        <p class="flex items-start border-b border-slate-100 pb-3">
+                            <span class="font-semibold w-48 text-slate-500 shrink-0">Tipe Penilaian</span>
+                            <span class="text-slate-800 font-bold" id="detTipe">: -</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div id="dynamicTables" class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
+
+                <div class="detail-card p-8 border border-slate-200 shadow-sm bg-white">
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-3 text-slate-800">
+                        <i class="fa-solid fa-shield-halved text-blue-600"></i> Unit Pelapor
+                    </h3>
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl max-w-fit">
+                        <p id="detReporter" class="font-bold text-blue-800">-</p>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-8 border-t border-slate-200">
+                    <button onclick="history.back()"
+                        class="flex items-center gap-2 font-bold text-slate-500 hover:text-blue-600 transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali
+                    </button>
+                    <div class="flex gap-4">
+                        <button id="btnEdit"
+                            class="px-10 py-2.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-gray-50 transition-all">Edit
+                            Data</button>
+                        <button id="btnDelete"
+                            class="px-10 py-2.5 bg-red-50 text-red-600 border border-red-100 font-bold rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-sm">Hapus</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- LOGIKA UI (DROPDOWN) ---
+        const menuBtn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('dropdownMenu');
+        const chevron = document.getElementById('chevronIcon');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = dropdown.classList.toggle('hidden');
+            chevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+
+        window.addEventListener('click', () => {
+            dropdown.classList.add('hidden');
+            chevron.style.transform = 'rotate(0deg)';
+        });
+
+        function handleLogout() {
+            if (confirm("Apakah Anda yakin ingin logout?")) {
+                window.location.href = "../login.html";
+            }
+        }
+
+        // --- DATA LOADING & DYNAMIC RENDERING ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const cat = params.get('cat');
+
+            const allData = JSON.parse(localStorage.getItem('all_kegiatan_data')) || {};
+            const currentCatData = allData[cat] || [];
+            const data = currentCatData[id];
+
+            if (!data) {
+                alert("Data tidak ditemukan!");
+                window.location.href = "list_kegiatan.html";
+                return;
+            }
+
+            // 1. Render Informasi Dasar
+            const tipeAktif = data.tipePenilaian || "Kegiatan";
+            document.getElementById('detNama').innerText = `: ${data.nama}`;
+            document.getElementById('detTipe').innerText = `: ${tipeAktif}`;
+            document.getElementById('detReporter').innerText = data.pelapor || "Tidak ditentukan";
+
+            const detJenis = document.getElementById('detJenis');
+            detJenis.innerText = `: ${data.jenis}`;
+            detJenis.className = data.jenis === "Wajib"
+                ? "ml-1 px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-orange-100 text-orange-700"
+                : "ml-1 px-3 py-1 rounded-full text-[10px] font-bold uppercase bg-blue-100 text-blue-700";
+
+            // 2. Render Tabel Berdasarkan Detail Points (Data Dinamis dari Form)
+            const container = document.getElementById('dynamicTables');
+            const points = data.detailPoints || {};
+
+           if (Object.keys(points).length === 0) {
+    container.innerHTML = `...`;
+} else {
+    let htmlContent = '';
+    for (const sectionTitle in points) {
+        // MODIFIKASI: Kirim tipeAktif (Prestasi/Kegiatan) ke fungsi
+        htmlContent += renderTableComponent(sectionTitle, points[sectionTitle], tipeAktif);
+    }
+    container.innerHTML = htmlContent;
+}
+
+            // --- FUNGSI DELETE ---
+            document.getElementById('btnDelete').onclick = () => {
+                if (confirm(`Apakah Anda yakin ingin menghapus kegiatan "${data.nama}"?`)) {
+                    currentCatData.splice(id, 1);
+                    allData[cat] = currentCatData;
+                    localStorage.setItem('all_kegiatan_data', JSON.stringify(allData));
+                    alert("Kegiatan berhasil dihapus!");
+                    window.location.href = "list_kegiatan.html";
+                }
+            };
+
+            // --- FUNGSI EDIT ---
+            document.getElementById('btnEdit').onclick = () => {
+                window.location.href = `form_kegiatan.html?edit=true&id=${id}&cat=${cat}`;
+            };
+        });
+
+        // Tambahkan parameter mainType untuk mengetahui tipe penilaian besar (Prestasi/Kegiatan)
+function renderTableComponent(title, items = [], mainType = "Kegiatan") {
+    // 1. Logika penentuan apakah Nilai TKM harus muncul
+    let showNilai = true;
+
+    if (mainType.toLowerCase() === "prestasi") {
+        // Jika tipe utama Prestasi, hanya muncul jika judul tabelnya persis "Prestasi"
+        if (title.toLowerCase() !== "prestasi") {
+            showNilai = false;
+        }
+    }
+
+    // 2. Logika pemilihan ikon
+    let icon = "fa-gear text-slate-400";
+    const lowTitle = title.toLowerCase();
+
+    if (lowTitle.includes("peran")) icon = "fa-users text-purple-500";
+    else if (lowTitle.includes("lingkup")) icon = "fa-crosshairs text-emerald-500";
+    else if (lowTitle.includes("durasi")) icon = "fa-clock text-orange-500";
+    else if (lowTitle.includes("prestasi")) icon = "fa-trophy text-amber-500";
+
+    return `
+    <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+        <div class="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center gap-3 font-bold text-slate-800 uppercase text-xs tracking-widest">
+            <i class="fa-solid ${icon}"></i> ${title}
+        </div>
+        <table class="w-full text-sm text-left">
+            <thead class="text-[10px] uppercase bg-slate-50 text-slate-400 tracking-wider">
+                <tr>
+                    <th class="px-6 py-3 font-bold">Keterangan</th>
+                    ${showNilai ? '<th class="px-6 py-3 text-right font-bold">Nilai TKM</th>' : ''}
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                ${items.map(item => `
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-slate-600">${item.label}</td>
+                        ${showNilai ? `
+                            <td class="px-6 py-4 text-right font-black text-blue-600 bg-blue-50/20">
+                                ${item.nilai}
+                            </td>
+                        ` : ''}
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    `;
+}
+    </script>
+</body>
+
+</html>
